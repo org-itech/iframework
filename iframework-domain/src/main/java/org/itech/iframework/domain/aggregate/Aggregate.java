@@ -24,4 +24,12 @@ public class Aggregate {
     public static Aggregate by(String property, AggregateFN fn) {
         return new Aggregate(property, fn);
     }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public AggregateFN getFn() {
+        return fn;
+    }
 }

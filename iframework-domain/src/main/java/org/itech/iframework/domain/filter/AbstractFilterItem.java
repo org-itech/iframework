@@ -4,11 +4,11 @@ import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.constant.DomainConstants;
 import org.itech.iframework.domain.data.DataType;
 import org.itech.iframework.domain.data.Operator;
+import org.itech.iframework.domain.util.QueryUtils;
+import org.springframework.data.mapping.PropertyPath;
+import org.springframework.util.Assert;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 /**
@@ -88,29 +88,27 @@ public abstract class AbstractFilterItem extends AbstractFilter implements Filte
     }
 
     private void afterPropertySet() {
-        if (!dataType.isSupportedOperator(operator)) {
-            throw new DomainException("筛选器的操作符错误，不支持的操作符, " + this.toString());
-        }
+        Assert.notNull(operator, "操作符 operator 不能为空！");
+
+        Assert.hasText(property, "属性 property 不能为空！");
+
+        Assert.isTrue(dataType.isSupportedOperator(operator), "数据类型 " + dataType.getName() + " 不支持 " + operator.getName() + " 操作符！");
 
         if (operator == Operator.BTW || operator == Operator.IN || operator == Operator.NOT_IN) {
             if (getValue() == null) {
                 throw new DomainException("筛选器值错误，操作符 " + operator.getCode() + " 的值不能为空！");
             }
 
-            if (!List.class.isAssignableFrom(getValue().getClass())) {
-                throw new DomainException("筛选器值错误，操作符 " + operator.getCode() + " 的值应该为数据！");
-            }
+            Assert.notNull(value, "操作符是 " + operator.getName() + " 时，值不能为空！");
+
+            Assert.isTrue(List.class.isAssignableFrom(getValue().getClass()), "操作符是 " + operator.getName() + " 时，值应该为数组！");
 
             if (operator == Operator.BTW) {
-                if (((List) getValue()).size() != DomainConstants.TWO) {
-                    throw new DomainException("筛选器值错误，操作符 " + operator.getCode() + " 的值应该包含两个元素！");
-                }
+                Assert.isTrue(((List) getValue()).size() == DomainConstants.TWO, "操作符是 " + operator.getName() + " 时，值应包含两个元素！");
             }
         }
 
-        if (!isValueValid(value)) {
-            throw new DomainException("筛选器的值类型错误, " + this.toString() + "！");
-        }
+        Assert.isTrue(isValueValid(value), "值 value 无法转换成 " + dataType.getName() + " 类型！");
     }
 
     private boolean isValueValid(Object value) {
@@ -134,6 +132,7 @@ public abstract class AbstractFilterItem extends AbstractFilter implements Filte
 
     @Override
     public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        return operator.toPredicate(root, query, cb, property, value);
+        Expression expression = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
+        return operator.toPredicate(root, query, cb, expression, property, value);
     }
 }

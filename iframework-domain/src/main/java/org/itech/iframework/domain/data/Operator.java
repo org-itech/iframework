@@ -1,8 +1,6 @@
 package org.itech.iframework.domain.data;
 
 import org.itech.iframework.domain.util.PredicateUtils;
-import org.itech.iframework.domain.util.QueryUtils;
-import org.springframework.data.mapping.PropertyPath;
 
 import javax.persistence.criteria.*;
 import java.util.List;
@@ -21,13 +19,11 @@ public enum Operator implements IEnum<Operator> {
      */
     EQ("等于") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
             if (value == null) {
-                return path.isNull();
+                return expression.isNull();
             } else {
-                return cb.equal(path, value);
+                return cb.equal(expression, value);
             }
         }
     },
@@ -37,13 +33,11 @@ public enum Operator implements IEnum<Operator> {
      */
     NEQ("不等于") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
             if (value == null) {
-                return path.isNotNull();
+                return expression.isNotNull();
             } else {
-                return cb.equal(path, value);
+                return cb.equal(expression, value);
             }
         }
     },
@@ -53,10 +47,8 @@ public enum Operator implements IEnum<Operator> {
      */
     GT("大于") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.greaterThan(path, (Comparable) value);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.greaterThan(expression, (Comparable) value);
         }
     },
 
@@ -65,10 +57,8 @@ public enum Operator implements IEnum<Operator> {
      */
     GTE("大于等于") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.greaterThanOrEqualTo(path, (Comparable) value);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.greaterThanOrEqualTo(expression, (Comparable) value);
         }
     },
 
@@ -77,10 +67,8 @@ public enum Operator implements IEnum<Operator> {
      */
     LT("小于") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.lessThan(path, (Comparable) value);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.lessThan(expression, (Comparable) value);
         }
     },
 
@@ -89,10 +77,8 @@ public enum Operator implements IEnum<Operator> {
      */
     LTE("小于等于") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.lessThanOrEqualTo(path, (Comparable) value);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.lessThanOrEqualTo(expression, (Comparable) value);
         }
     },
 
@@ -101,9 +87,7 @@ public enum Operator implements IEnum<Operator> {
      */
     BTW("范围") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
             Predicate predicate = null;
             List<Comparable> list = (List<Comparable>) value;
 
@@ -111,14 +95,14 @@ public enum Operator implements IEnum<Operator> {
             Object v2 = list.get(1);
 
             if (v1 != null) {
-                predicate = cb.greaterThanOrEqualTo(path, (Comparable) v1);
+                predicate = cb.greaterThanOrEqualTo(expression, (Comparable) v1);
             }
 
             if (v2 != null) {
                 if (predicate == null) {
-                    predicate = cb.lessThanOrEqualTo(path, (Comparable) v2);
+                    predicate = cb.lessThanOrEqualTo(expression, (Comparable) v2);
                 } else {
-                    predicate = cb.and(predicate, cb.lessThanOrEqualTo(path, (Comparable) v2));
+                    predicate = cb.and(predicate, cb.lessThanOrEqualTo(expression, (Comparable) v2));
                 }
             }
 
@@ -131,10 +115,8 @@ public enum Operator implements IEnum<Operator> {
      */
     CT("包含") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.like(path, "%" + value + "%");
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.like(expression, "%" + value + "%");
         }
     },
 
@@ -143,10 +125,8 @@ public enum Operator implements IEnum<Operator> {
      */
     SW("以...开头") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.like(path, "%" + value);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.like(expression, "%" + value);
         }
     },
 
@@ -155,10 +135,8 @@ public enum Operator implements IEnum<Operator> {
      */
     EW("以...结尾") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return cb.like(path, value + "%");
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return cb.like(expression, value + "%");
         }
     },
 
@@ -167,12 +145,10 @@ public enum Operator implements IEnum<Operator> {
      */
     MT("全文检索") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            Expression<Double> ex = cb.function(MATCH_FUNCTION_NAME, Double.class, expression, cb.literal(value));
 
-            Expression<Double> expression = cb.function(MATCH_FUNCTION_NAME, Double.class, path, cb.literal(value));
-
-            return cb.greaterThan(expression, .0);
+            return cb.greaterThan(ex, .0);
         }
     },
 
@@ -181,10 +157,8 @@ public enum Operator implements IEnum<Operator> {
      */
     IN("在...之内") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return path.in(value);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return expression.in(value);
         }
     },
 
@@ -193,10 +167,8 @@ public enum Operator implements IEnum<Operator> {
      */
     NOT_IN("不在...之内") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            return path.in(value).not();
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return expression.in(value).not();
         }
     },
 
@@ -205,12 +177,10 @@ public enum Operator implements IEnum<Operator> {
      */
     BIT_IN("位值，在...之内") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            Expression ex = cb.function(BIT_AND_FUNCTION_NAME, Long.class, expression, cb.literal(value));
 
-            Expression expression = cb.function(BIT_AND_FUNCTION_NAME, Long.class, path, cb.literal(value));
-
-            return cb.equal(expression, path);
+            return cb.equal(expression, ex);
         }
     },
 
@@ -219,10 +189,8 @@ public enum Operator implements IEnum<Operator> {
      */
     BIT_CT("位值，包含") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
-
-            Expression expression = cb.function(BIT_AND_FUNCTION_NAME, Long.class, path, cb.literal(value));
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            Expression ex = cb.function(BIT_AND_FUNCTION_NAME, Long.class, expression, cb.literal(value));
 
             return cb.equal(expression, value);
         }
@@ -233,8 +201,8 @@ public enum Operator implements IEnum<Operator> {
      */
     DES("子代") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            return PredicateUtils.des(root, query, cb, value, property);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return PredicateUtils.des(root, query, cb, expression, property, value);
         }
     },
 
@@ -243,8 +211,8 @@ public enum Operator implements IEnum<Operator> {
      */
     DES_AS("子代及本身") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            return PredicateUtils.desAs(root, query, cb, value, property);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return PredicateUtils.desAs(root, query, cb, expression, property, value);
         }
     },
 
@@ -253,8 +221,8 @@ public enum Operator implements IEnum<Operator> {
      */
     ANC("父代") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            return PredicateUtils.anc(root, query, cb, value, property);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return PredicateUtils.anc(root, query, cb, expression, property, value);
         }
     },
 
@@ -263,8 +231,8 @@ public enum Operator implements IEnum<Operator> {
      */
     ANC_AS("父代及本身") {
         @Override
-        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value) {
-            return PredicateUtils.ancAs(root, query, cb, value, property);
+        public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+            return PredicateUtils.ancAs(root, query, cb, expression, property, value);
         }
     };
 
@@ -285,5 +253,5 @@ public enum Operator implements IEnum<Operator> {
         return this.name;
     }
 
-    public abstract Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value);
+    public abstract Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value);
 }

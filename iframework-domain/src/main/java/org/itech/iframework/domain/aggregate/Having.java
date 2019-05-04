@@ -1,18 +1,46 @@
 package org.itech.iframework.domain.aggregate;
 
+import org.itech.iframework.domain.data.Operator;
+import org.itech.iframework.domain.filter.NumberFilter;
+import org.itech.iframework.domain.util.QueryUtils;
+import org.springframework.data.mapping.PropertyPath;
+import org.springframework.util.Assert;
+
+import javax.persistence.criteria.*;
+
 /**
  * Having
  *
  * @author liuqiang
  */
-public class Having {
-    private String property;
+public class Having extends NumberFilter {
     private AggregateFN fn;
-    private Object value;
 
-    private Having(String property, AggregateFN fn, Object value) {
-        this.property = property;
+    private Having(String property, Object value, Operator operator, AggregateFN fn) {
+        super(property, value, operator);
         this.fn = fn;
-        this.value = value;
+
+        afterPropertySet();
+    }
+
+    public Having by(String property, Object value, Operator operator, AggregateFN fn) {
+        return new Having(property, value, operator, fn);
+    }
+
+    public AggregateFN getFn() {
+        return fn;
+    }
+
+    private void afterPropertySet() {
+        Assert.notNull(fn, "聚合函数 fn 不能为空！");
+    }
+
+    @Override
+    public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        Expression path = QueryUtils.toExpressionRecursively(root, PropertyPath.from(getProperty(), root.getJavaType()));
+
+        Expression ex = getFn().toExpression(path, cb, getProperty());
+
+        return getOperator().toPredicate(root, query, cb, ex, getProperty(), getValue());
     }
 }

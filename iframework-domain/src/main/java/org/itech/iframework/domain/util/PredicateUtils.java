@@ -1,11 +1,10 @@
 package org.itech.iframework.domain.util;
 
+import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.model.AbstractTreeAggregateRoot_;
 import org.itech.iframework.domain.model.AbstractTreePath_;
-import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.model.TreeNode;
 import org.springframework.core.ResolvableType;
-import org.springframework.data.mapping.PropertyPath;
 
 import javax.persistence.criteria.*;
 
@@ -18,41 +17,41 @@ import static org.itech.iframework.domain.constant.DomainConstants.ROOT_ID;
  * @author liuqiang
  */
 public final class PredicateUtils {
-    public static Predicate des(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property) {
-        return getDesPredicate(root, query, cb, property, value, null, false);
+    public static Predicate des(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+        return getDesPredicate(root, query, cb, expression, property, value, null, false);
     }
 
-    public static Predicate desAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property) {
-        return getDesPredicate(root, query, cb, property, value, null, true);
+    public static Predicate desAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+        return getDesPredicate(root, query, cb, expression, property, value, null, true);
     }
 
-    public static Predicate anc(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property) {
-        return getAncPredicate(root, query, cb, property, value, null, false);
+    public static Predicate anc(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+        return getAncPredicate(root, query, cb, expression, property, value, null, false);
     }
 
-    public static Predicate ancAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property) {
-        return getAncPredicate(root, query, cb, property, value, null, true);
+    public static Predicate ancAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
+        return getAncPredicate(root, query, cb, expression, property, value, null, true);
     }
 
-    public static Predicate des(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property, Long depth) {
-        return getDesPredicate(root, query, cb, property, value, depth, false);
+    public static Predicate des(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth) {
+        return getDesPredicate(root, query, cb, expression, property, value, depth, false);
     }
 
-    public static Predicate desAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property, Long depth) {
-        return getDesPredicate(root, query, cb, property, value, depth, true);
+    public static Predicate desAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth) {
+        return getDesPredicate(root, query, cb, expression, property, value, depth, true);
     }
 
-    public static Predicate anc(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property, Long depth) {
-        return getAncPredicate(root, query, cb, property, value, depth, false);
+    public static Predicate anc(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth) {
+        return getAncPredicate(root, query, cb, expression, property, value, depth, false);
     }
 
-    public static Predicate ancAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Object value, String property, Long depth) {
-        return getAncPredicate(root, query, cb, property, value, depth, true);
+    public static Predicate ancAs(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth) {
+        return getAncPredicate(root, query, cb, expression, property, value, depth, true);
     }
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
-    static Predicate getDesPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value, Long depth, boolean containSelf) {
-        Class treeClazz = ((Path) QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()))).getParentPath().getJavaType();
+    static Predicate getDesPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth, boolean containSelf) {
+        Class treeClazz = ((Path) expression).getParentPath().getJavaType();
 
         if (!TreeNode.class.isAssignableFrom(treeClazz)) {
             throw new DomainException("非树实体无法使用子代操作符！");
@@ -113,8 +112,8 @@ public final class PredicateUtils {
     }
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
-    static Predicate getAncPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, String property, Object value, Long depth, boolean containSelf) {
-        Class treeClazz = ((Path) QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()))).getParentPath().getJavaType();
+    static Predicate getAncPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth, boolean containSelf) {
+        Class treeClazz = ((Path) expression).getParentPath().getJavaType();
 
         if (!TreeNode.class.isAssignableFrom(treeClazz)) {
             throw new DomainException("非树实体无法使用父代操作符！");
