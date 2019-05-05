@@ -2,7 +2,6 @@ package org.itech.iframework.domain.aggregate;
 
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

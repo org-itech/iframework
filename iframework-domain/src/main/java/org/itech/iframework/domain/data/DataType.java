@@ -63,10 +63,10 @@ public enum DataType implements IEnum<DataType> {
             , Number.class),
 
     /**
-     * 日期
+     * 日期和时间
      * ISO8601
      */
-    DATETIME("日期", EnumSet.of(Operator.EQ
+    DATE("日期和时间", EnumSet.of(Operator.EQ
             , Operator.NEQ
             , Operator.GT
             , Operator.GTE

@@ -1,11 +1,11 @@
 package org.itech.iframework.domain.data;
 
 /**
- * NumberType
+ * IntegerType
  *
  * @author liuqiang
  */
-public enum NumberType implements IEnum<NumberType> {
+public enum IntegerType implements IEnum<IntegerType> {
     /**
      * SHORT
      * -32768 ~ 32767
@@ -22,26 +22,11 @@ public enum NumberType implements IEnum<NumberType> {
      * BIGINT
      * -263 ~ 263-1
      */
-    BIGINT("BIGINT"),
-
-    /**
-     * FLOAT
-     */
-    FLOAT("FLOAT"),
-
-    /**
-     * DOUBLE
-     */
-    DOUBLE("DOUBLE"),
-
-    /**
-     * BIG_DECIMAL
-     */
-    BIG_DECIMAL("BIG_DECIMAL");
+    BIGINT("BIGINT");
 
     private final String name;
 
-    NumberType(String name) {
+    IntegerType(String name) {
         this.name = name;
     }
 

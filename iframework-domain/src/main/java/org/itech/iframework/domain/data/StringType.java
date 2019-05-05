@@ -19,9 +19,9 @@ public enum StringType implements IEnum<StringType> {
     TEXT("长文本"),
 
     /**
-     * 标识
+     * 引用
      */
-    GUID("标识"),
+    REFERENCE("引用"),
 
     /**
      * 层级

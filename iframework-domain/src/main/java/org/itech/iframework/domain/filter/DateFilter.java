@@ -10,6 +10,6 @@ import org.itech.iframework.domain.data.Operator;
  */
 public class DateFilter extends AbstractFilterItem implements FilterItem {
     public DateFilter(String property, Object value, Operator operator) {
-        super(property, value, operator, DataType.DATETIME);
+        super(property, value, operator, DataType.DATE);
     }
 }
