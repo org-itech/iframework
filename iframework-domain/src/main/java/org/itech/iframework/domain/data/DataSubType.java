@@ -1,7 +1,5 @@
 package org.itech.iframework.domain.data;
 
-import java.util.EnumSet;
-
 /**
  * DataType
  *
@@ -10,102 +8,92 @@ import java.util.EnumSet;
 public enum DataSubType implements IEnum<DataSubType> {
     /**
      * 字符串
+     * 主要用于短文本
      */
-    STRING("字符串", EnumSet.of(Operator.EQ
-            , Operator.NEQ
-            , Operator.CT
-            , Operator.SW
-            , Operator.EW
-            , Operator.IN
-            , Operator.NOT_IN
-            , Operator.DES
-            , Operator.ANC
-            , Operator.DES_AS
-            , Operator.ANC_AS)),
+    STRING("字符串"),
 
     /**
-     * 布尔
+     * 长文本
+     * 主要用长文本
      */
-    BOOLEAN("布尔", EnumSet.of(Operator.EQ
-            , Operator.NEQ)),
+    TEXT("长文本"),
 
     /**
-     * 整数
+     * 引用
      */
-    INTEGER("整数", EnumSet.of(Operator.EQ
-            , Operator.NEQ
-            , Operator.GT
-            , Operator.GTE
-            , Operator.LT
-            , Operator.LTE
-            , Operator.BTW
-            , Operator.CT
-            , Operator.IN
-            , Operator.NOT_IN
-            , Operator.BIT_IN
-            , Operator.BIT_CT)),
+    REFERENCE("引用"),
 
     /**
-     * 数字
+     * 层级
      */
-    NUMBER("数字", EnumSet.of(Operator.EQ
-            , Operator.NEQ
-            , Operator.GT
-            , Operator.GTE
-            , Operator.LT
-            , Operator.LTE
-            , Operator.BTW
-            , Operator.IN
-            , Operator.NOT_IN)),
+    HIERARCHY("层级"),
+
+    /**
+     * 双态
+     */
+    DUAL("双态"),
+
+    /**
+     * 三态
+     */
+    TRIPLE("三态"),
+
+    /**
+     * SHORT
+     * -32768 ~ 32767
+     */
+    SHORT("SHORT"),
+
+    /**
+     * INT
+     * -2147483648 ~ 2147483647
+     */
+    INT("INT"),
+
+    /**
+     * BIGINT
+     * -263 ~ 263-1
+     */
+    BIGINT("BIGINT"),
+
+    /**
+     * FLOAT
+     */
+    FLOAT("FLOAT"),
+
+    /**
+     * DOUBLE
+     */
+    DOUBLE("DOUBLE"),
+
+    /**
+     * BIG_DECIMAL
+     */
+    BIG_DECIMAL("BIG_DECIMAL"),
 
     /**
      * 日期
-     * ISO8601
      */
-    DATE("日期", EnumSet.of(Operator.EQ
-            , Operator.NEQ
-            , Operator.GT
-            , Operator.GTE
-            , Operator.LT
-            , Operator.LTE
-            , Operator.BTW
-            , Operator.IN)),
+    DATE("日期"),
 
     /**
-     * 对象
+     * 时间
      */
-    Object("对象", EnumSet.noneOf(Operator.class));
+    TIME("时间"),
+
+    /**
+     * 日期时间
+     */
+    DATETIME("日期时间");
 
     private final String name;
 
-    private final EnumSet<Operator> supportedOperators;
-
-    DataSubType(String name, EnumSet<Operator> supportedOperators) {
+    DataSubType(String name) {
         this.name = name;
-        this.supportedOperators = supportedOperators;
     }
 
     @Override
     public String getName() {
         return this.name;
-    }
-
-    /**
-     * 获取支持的操作符
-     *
-     * @return 操作符集合
-     */
-    public EnumSet<Operator> getSupportedOperators() {
-        return this.supportedOperators;
-    }
-
-    /**
-     * 是否是支持的操作符
-     *
-     * @param operator 操作符
-     * @return 是否支持
-     */
-    public boolean isSupportedOperator(Operator operator) {
-        return this.supportedOperators.contains(operator);
     }
 }
