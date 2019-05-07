@@ -1,7 +1,5 @@
 package org.itech.iframework.domain.model;
 
-import org.springframework.util.StringUtils;
-
 /**
  * Persistable
  *
@@ -22,6 +20,6 @@ public interface Persistable<ID> {
      * @return 是否是新的
      */
     default boolean isNew() {
-        return StringUtils.isEmpty(getId());
+        return null == getId();
     }
 }

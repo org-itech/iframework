@@ -13,6 +13,7 @@ import static org.itech.iframework.domain.constant.DomainConstants.MATCH_FUNCTIO
  *
  * @author liuqiang
  */
+@SuppressWarnings("unchecked")
 public enum Operator implements IEnum<Operator> {
     /**
      * 等于

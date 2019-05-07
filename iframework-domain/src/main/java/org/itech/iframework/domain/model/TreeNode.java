@@ -48,11 +48,21 @@ public interface TreeNode<Path extends TreePath<Node, Path>, Node extends TreeNo
         return getChildren() != null && getChildren().size() > 0;
     }
 
+    /**
+     * 获取路径类型
+     *
+     * @return 路径类型
+     */
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     default Class<Path> getPathClass() {
         return (Class<Path>) getResolvableType().getGeneric(0).resolve();
     }
 
+    /**
+     * 获取  ResolvableType
+     *
+     * @return ResolvableType
+     */
     @Override
     default ResolvableType getResolvableType() {
         return ResolvableType.forType(this.getClass().getGenericSuperclass());

@@ -10,6 +10,7 @@ import javax.persistence.criteria.Expression;
  *
  * @author liuqiang
  */
+@SuppressWarnings("unchecked")
 public enum AggregateFN implements IEnum<AggregateFN> {
     /**
      * 求和

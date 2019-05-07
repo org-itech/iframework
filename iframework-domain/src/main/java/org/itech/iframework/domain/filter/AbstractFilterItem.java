@@ -114,15 +114,13 @@ public abstract class AbstractFilterItem extends AbstractFilter implements Filte
     private boolean isValueValid(Object value) {
         boolean result = true;
 
-        if (value == null) {
-            result = true;
-        }
-
-        if (List.class.isAssignableFrom(value.getClass())) {
-            for (Object item : (List) value) {
-                if (!isValueValid(item)) {
-                    result = false;
-                    break;
+        if (value != null) {
+            if (List.class.isAssignableFrom(value.getClass())) {
+                for (Object item : (List) value) {
+                    if (!isValueValid(item)) {
+                        result = false;
+                        break;
+                    }
                 }
             }
         }
