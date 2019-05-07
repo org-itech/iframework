@@ -1,4 +1,4 @@
-package org.itech.iframework.domain.filter;
+package org.itech.iframework.domain.query.filter;
 
 import org.itech.iframework.domain.data.DataType;
 import org.itech.iframework.domain.data.Operator;

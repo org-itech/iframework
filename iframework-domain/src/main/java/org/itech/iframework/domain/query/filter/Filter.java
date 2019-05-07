@@ -1,4 +1,4 @@
-package org.itech.iframework.domain.filter;
+package org.itech.iframework.domain.query.filter;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

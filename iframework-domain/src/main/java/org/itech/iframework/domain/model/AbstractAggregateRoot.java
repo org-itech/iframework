@@ -1,5 +1,6 @@
 package org.itech.iframework.domain.model;
 
+import org.itech.iframework.domain.query.aggregate.Aggregates;
 import org.springframework.data.domain.AfterDomainEventPublication;
 import org.springframework.data.domain.DomainEvents;
 import org.springframework.util.Assert;

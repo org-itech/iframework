@@ -5,5 +5,6 @@ package org.itech.iframework.domain.dto;
  *
  * @author liuqiang
  */
-public interface DTO {
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
+public interface DTO<T> {
 }

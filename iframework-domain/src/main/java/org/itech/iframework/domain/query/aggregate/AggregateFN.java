@@ -1,4 +1,4 @@
-package org.itech.iframework.domain.aggregate;
+package org.itech.iframework.domain.query.aggregate;
 
 import org.itech.iframework.domain.data.IEnum;
 
@@ -17,7 +17,7 @@ public enum AggregateFN implements IEnum<AggregateFN> {
      */
     SUM("求和") {
         @Override
-        public Expression toExpression(Expression p, CriteriaBuilder cb, String property) {
+        public Expression toExpression(Expression p, CriteriaBuilder cb) {
             return cb.sum(p);
         }
     },
@@ -27,7 +27,7 @@ public enum AggregateFN implements IEnum<AggregateFN> {
      */
     COUNT("计数") {
         @Override
-        public Expression toExpression(Expression p, CriteriaBuilder cb, String property) {
+        public Expression toExpression(Expression p, CriteriaBuilder cb) {
             return cb.count(p);
         }
     },
@@ -37,7 +37,7 @@ public enum AggregateFN implements IEnum<AggregateFN> {
      */
     MIN("最小值") {
         @Override
-        public Expression toExpression(Expression p, CriteriaBuilder cb, String property) {
+        public Expression toExpression(Expression p, CriteriaBuilder cb) {
             return cb.min(p);
         }
     },
@@ -47,7 +47,7 @@ public enum AggregateFN implements IEnum<AggregateFN> {
      */
     MAX("最大值") {
         @Override
-        public Expression toExpression(Expression p, CriteriaBuilder cb, String property) {
+        public Expression toExpression(Expression p, CriteriaBuilder cb) {
             return cb.max(p);
         }
     },
@@ -57,7 +57,7 @@ public enum AggregateFN implements IEnum<AggregateFN> {
      */
     AVG("平均值") {
         @Override
-        public Expression toExpression(Expression p, CriteriaBuilder cb, String property) {
+        public Expression toExpression(Expression p, CriteriaBuilder cb) {
             return cb.avg(p);
         }
     },
@@ -67,7 +67,7 @@ public enum AggregateFN implements IEnum<AggregateFN> {
      */
     COUNT_DISTINCT("计数") {
         @Override
-        public Expression toExpression(Expression p, CriteriaBuilder cb, String property) {
+        public Expression toExpression(Expression p, CriteriaBuilder cb) {
             return cb.countDistinct(p);
         }
     };
@@ -95,5 +95,5 @@ public enum AggregateFN implements IEnum<AggregateFN> {
         return name;
     }
 
-    public abstract Expression toExpression(Expression<?> p, CriteriaBuilder cb, String property);
+    public abstract Expression toExpression(Expression<?> p, CriteriaBuilder cb);
 }
