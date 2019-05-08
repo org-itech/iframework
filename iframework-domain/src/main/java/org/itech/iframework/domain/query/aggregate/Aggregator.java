@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 public class Aggregator {
     private Aggregates aggregates;
     private GroupBys groupBys;
-    private Having havings;
+    private Havings havings;
 
     private Aggregator(Aggregates aggregates) {
         this.aggregates = aggregates;
@@ -23,7 +23,7 @@ public class Aggregator {
         this.groupBys = groupBys;
     }
 
-    private Aggregator(Aggregates aggregates, GroupBys groupBys, Having havings) {
+    private Aggregator(Aggregates aggregates, GroupBys groupBys, Havings havings) {
         this(aggregates, groupBys);
         this.havings = havings;
     }
@@ -32,7 +32,7 @@ public class Aggregator {
         return new Aggregator(aggregates, groupBys);
     }
 
-    public static Aggregator by(Aggregates aggregates, GroupBys groupBys, Having havings) {
+    public static Aggregator by(Aggregates aggregates, GroupBys groupBys, Havings havings) {
         return new Aggregator(aggregates, groupBys, havings);
     }
 
@@ -48,7 +48,7 @@ public class Aggregator {
         return groupBys;
     }
 
-    public Having getHavings() {
+    public Havings getHavings() {
         return havings;
     }
 }

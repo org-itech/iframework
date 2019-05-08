@@ -1,7 +1,8 @@
 package org.itech.iframework.domain.repository;
 
-import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.query.Selections;
+import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,6 +35,22 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @return the saved entity
      */
     <S extends T> S saveAndRefresh(S entity);
+
+    /**
+     * 是否存在满足规约的实体
+     *
+     * @param specification 规约
+     * @return 是否存在
+     */
+    boolean exists(Specification<T> specification);
+
+    /**
+     * 计算聚合
+     *
+     * @param aggregator 聚合器
+     * @return 聚合结果
+     */
+    List<Map<String, Object>> aggregate(Aggregator aggregator);
 
     /**
      * 根据id获取DTO
@@ -127,18 +144,84 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
 
     /**
-     * 是否存在满足规约的实体
+     * 获取指定数据
      *
-     * @param specification 规约
-     * @return 是否存在
+     * @param id         id
+     * @param selections selections
+     * @return 指定数据
      */
-    boolean exists(Specification<T> specification);
+    Optional<Map<String, Object>> findById(String id, Selections selections);
 
     /**
-     * 计算聚合
+     * 获取指定数据
      *
-     * @param aggregator 聚合器
-     * @return 聚合结果
+     * @param selections selections
+     * @return 指定数据
      */
-    List<Map<String, Object>> aggregate(Aggregator aggregator);
+    List<Map<String, Object>> findAll(Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param ids        ids
+     * @param selections selections
+     * @return 指定数据
+     */
+    List<Map<String, Object>> findAllById(Iterable<String> ids, Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param sort       sort
+     * @param selections selections
+     * @return 指定数据
+     */
+    List<Map<String, Object>> findAll(Sort sort, Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param pageable   pageable
+     * @param selections selections
+     * @return 指定数据
+     */
+    Page<Map<String, Object>> findAll(Pageable pageable, Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param spec       spec
+     * @param selections selections
+     * @return 指定数据
+     */
+    Optional<Map<String, Object>> findOne(Specification<T> spec, Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param spec       spec
+     * @param selections selections
+     * @return 指定数据
+     */
+    List<Map<String, Object>> findAll(Specification<T> spec, Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param spec       spec
+     * @param pageable   pageable
+     * @param selections selections
+     * @return 指定数据
+     */
+    Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Selections selections);
+
+    /**
+     * 获取指定数据
+     *
+     * @param spec       spec
+     * @param sort       sort
+     * @param selections selections
+     * @return 指定数据
+     */
+    List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Selections selections);
 }

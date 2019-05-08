@@ -10,6 +10,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * GroupBys
@@ -28,6 +29,12 @@ public class GroupBys implements Iterable<GroupBys.GroupBy> {
         return groupBys.iterator();
     }
 
+    public List<javax.persistence.criteria.Selection> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+        return groupBys.stream()
+                .map(item -> item.toJpaSelection(root, query, cb))
+                .collect(Collectors.toList());
+    }
+
     public static GroupBysBuilder builder() {
         return new GroupBysBuilder();
     }
@@ -39,13 +46,13 @@ public class GroupBys implements Iterable<GroupBys.GroupBy> {
             this.groupBys = new ArrayList<>();
         }
 
-        public GroupBysBuilder by(String property, String alias) {
+        public GroupBysBuilder add(String property, String alias) {
             this.groupBys.add(GroupBys.GroupBy.by(property, alias));
 
             return this;
         }
 
-        public GroupBysBuilder by(String property) {
+        public GroupBysBuilder add(String property) {
             this.groupBys.add(GroupBy.by(property, property));
 
             return this;

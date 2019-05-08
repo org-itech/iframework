@@ -11,6 +11,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Aggregates
@@ -29,6 +30,12 @@ public class Aggregates implements Iterable<Aggregates.Aggregate> {
         return aggregates.iterator();
     }
 
+    public List<javax.persistence.criteria.Selection> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+        return aggregates.stream()
+                .map(item -> item.toJpaSelection(root, query, cb))
+                .collect(Collectors.toList());
+    }
+
     public static AggregatesBuilder builder() {
         return new AggregatesBuilder();
     }
@@ -40,13 +47,13 @@ public class Aggregates implements Iterable<Aggregates.Aggregate> {
             this.aggregates = new ArrayList<>();
         }
 
-        public AggregatesBuilder aggregate(String property, AggregateFN fn, String alias) {
+        public AggregatesBuilder add(String property, AggregateFN fn, String alias) {
             this.aggregates.add(Aggregate.by(property, fn, alias));
 
             return this;
         }
 
-        public AggregatesBuilder aggregate(String property, AggregateFN fn) {
+        public AggregatesBuilder add(String property, AggregateFN fn) {
             this.aggregates.add(Aggregate.by(property, fn, property));
 
             return this;
