@@ -72,12 +72,12 @@ public class Selections implements Iterable<Selection> {
 
         @Override
         public String getProperty() {
-            return null;
+            return property;
         }
 
         @Override
         public String getAlias() {
-            return null;
+            return alias;
         }
     }
 }

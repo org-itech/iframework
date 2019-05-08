@@ -2,7 +2,6 @@ package org.itech.iframework.domain.query.filter;
 
 import org.itech.iframework.domain.data.DataType;
 import org.itech.iframework.domain.data.Operator;
-import org.itech.iframework.domain.query.aggregate.Aggregates;
 
 /**
  * DateFilter
