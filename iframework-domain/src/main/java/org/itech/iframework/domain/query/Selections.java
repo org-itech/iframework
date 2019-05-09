@@ -29,7 +29,7 @@ public class Selections implements Iterable<Selection<?>> {
         return new SelectionsBuilder();
     }
 
-    public List<javax.persistence.criteria.Selection<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+    public List<javax.persistence.criteria.Expression<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
         return selections.stream()
                 .map(item -> item.toJpaSelection(root, query, cb))
                 .collect(Collectors.toList());

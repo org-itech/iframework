@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 仓储接口
+ * jpa repository interface
  *
- * @param <T> 聚合根类型
+ * @param <T> T
  * @author liuqiang
  */
 @NoRepositoryBean
@@ -31,7 +31,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * Saves an entity and refresh changes instantly.
      *
-     * @param entity 实体
+     * @param entity entity
      * @return the saved entity
      */
     <S extends T> S saveAndRefresh(S entity);
@@ -39,25 +39,53 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 是否存在满足规约的实体
      *
-     * @param specification 规约
-     * @return 是否存在
+     * @param spec spec
+     * @return boolean
      */
-    boolean exists(Specification<T> specification);
+    boolean exists(Specification<T> spec);
 
     /**
      * 计算聚合
      *
-     * @param aggregator 聚合器
+     * @param aggregator aggregator
      * @return 聚合结果
      */
     List<Map<String, Object>> aggregate(Aggregator aggregator);
 
     /**
+     * 计算聚合
+     *
+     * @param sort       sort
+     * @param aggregator aggregator
+     * @return 聚合结果
+     */
+    List<Map<String, Object>> aggregate(Sort sort, Aggregator aggregator);
+
+    /**
+     * 计算聚合
+     *
+     * @param pageable   pageable
+     * @param aggregator aggregator
+     * @return 聚合结果
+     */
+    List<Map<String, Object>> aggregate(Pageable pageable, Aggregator aggregator);
+
+    /**
+     * 计算聚合
+     *
+     * @param spec       spec
+     * @param pageable   pageable
+     * @param aggregator aggregator
+     * @return 聚合结果
+     */
+    List<Map<String, Object>> aggregate(Specification<T> spec, Pageable pageable, Aggregator aggregator);
+
+    /**
      * 根据id获取DTO
      *
-     * @param id       聚合根标识
+     * @param id       id
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto
      */
     <D extends DTO<T>> Optional<D> findById(String id, Class<D> dtoClass);
@@ -65,8 +93,8 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 获取全部dto
      *
-     * @param dtoClass dto class
-     * @param <D>      类型
+     * @param dtoClass dto
+     * @param <D>      D
      * @return dto集合
      */
     <D extends DTO<T>> List<D> findAll(Class<D> dtoClass);
@@ -74,9 +102,9 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据id集合获取全部dto
      *
-     * @param ids      id集合
+     * @param ids      ids
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto集合
      */
     <D extends DTO<T>> List<D> findAllById(Iterable<String> ids, Class<D> dtoClass);
@@ -84,9 +112,9 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据排序对象获取全部dto
      *
-     * @param sort     排序对象
+     * @param sort     sort
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto集合
      */
     <D extends DTO<T>> List<D> findAll(Sort sort, Class<D> dtoClass);
@@ -94,7 +122,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据分页对象获取dto分页数据
      *
-     * @param pageable 分页对象
+     * @param pageable pageable
      * @param dtoClass dto class
      * @return dto分页数据
      */
@@ -104,9 +132,9 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据规约获取dto
      *
-     * @param spec     规约
+     * @param spec     spec
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto
      */
     <D extends DTO<T>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
@@ -114,9 +142,9 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据规约获取全部dto
      *
-     * @param spec     规约
+     * @param spec     spec
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto集合
      */
     <D extends DTO<T>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
@@ -124,10 +152,10 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据规约查找dto分页数据
      *
-     * @param spec     规约
-     * @param pageable 分页对象
+     * @param spec     spec
+     * @param pageable pageable
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto分页数据
      */
     <D extends DTO<T>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
@@ -135,10 +163,10 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
     /**
      * 根据规约查找dto数据，返回排序数据
      *
-     * @param spec     规约
-     * @param sort     排序对象
+     * @param spec     spec
+     * @param sort     sort
      * @param dtoClass dto class
-     * @param <D>      类型
+     * @param <D>      D
      * @return dto分页数据
      */
     <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);

@@ -30,7 +30,7 @@ public class Aggregates implements Iterable<Aggregates.Aggregate> {
         return aggregates.iterator();
     }
 
-    public List<javax.persistence.criteria.Selection<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+    public List<javax.persistence.criteria.Expression<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
         return aggregates.stream()
                 .map(item -> item.toJpaSelection(root, query, cb))
                 .collect(Collectors.toList());
@@ -114,7 +114,7 @@ public class Aggregates implements Iterable<Aggregates.Aggregate> {
         }
 
         @Override
-        public javax.persistence.criteria.Selection<?> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+        public javax.persistence.criteria.Expression<?> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
             Expression expression = QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
 
             return fn.toExpression(expression, cb);

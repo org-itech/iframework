@@ -64,6 +64,21 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
     }
 
     @Override
+    public List<Map<String, Object>> aggregate(Sort sort, Aggregator aggregator) {
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> aggregate(Pageable pageable, Aggregator aggregator) {
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> aggregate(Specification<T> spec, Pageable pageable, Aggregator aggregator) {
+        return null;
+    }
+
+    @Override
     public <D extends DTO<T>> Optional<D> findById(String id, Class<D> dtoClass) {
         return Optional.empty();
     }
@@ -168,13 +183,46 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    protected <S extends T> TypedQuery<Tuple> getTupleQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, Selections selections) {
+    protected <S extends T> TypedQuery<Tuple> getTupleQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, List<Selection<?>> selections) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = builder.createTupleQuery();
 
         Root<S> root = applySpecificationToCriteria(spec, domainClass, query);
 
-        query.multiselect(selections.toJpaSelection(root, query, builder));
+        query.multiselect(selections);
+
+        if (sort.isSorted()) {
+            query.orderBy(toOrders(sort, root, builder));
+        }
+
+        return applyRepositoryMethodMetadata(em.createQuery(query));
+    }
+
+    protected <S extends T> TypedQuery<Tuple> getTupleQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, Aggregator aggregator) {
+        List<Selection<?>> selections = new ArrayList<>();
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> query = builder.createTupleQuery();
+
+        Root<S> root = applySpecificationToCriteria(spec, domainClass, query);
+
+        if (aggregator.getGroupBys() != null) {
+            List<Expression<?>> groupBySelections = aggregator.getGroupBys().toJpaSelection(root, query, builder);
+
+            selections.addAll(groupBySelections);
+
+            query.groupBy(groupBySelections);
+        }
+
+        if (aggregator.getAggregates() != null) {
+            selections.addAll(aggregator.getAggregates().toJpaSelection(root, query, builder));
+        }
+
+        if (aggregator.getHavings() != null) {
+            query.having(aggregator.getHavings().toPredicate(root, query, builder));
+        }
+
+        query.multiselect(selections);
 
         if (sort.isSorted()) {
             query.orderBy(toOrders(sort, root, builder));
