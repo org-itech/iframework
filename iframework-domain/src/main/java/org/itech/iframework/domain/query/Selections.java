@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
  *
  * @author liuqiang
  */
-public class Selections implements Iterable<Selection> {
-    private List<Selection> selections;
+public class Selections implements Iterable<Selection<?>> {
+    private List<Selection<?>> selections;
 
-    private Selections(List<Selection> selections) {
+    private Selections(List<Selection<?>> selections) {
         this.selections = selections;
     }
 
     @Override
-    public Iterator<Selection> iterator() {
+    public Iterator<Selection<?>> iterator() {
         return selections.iterator();
     }
 
@@ -31,12 +31,12 @@ public class Selections implements Iterable<Selection> {
 
     public List<javax.persistence.criteria.Selection<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
         return selections.stream()
-                .map(item -> (javax.persistence.criteria.Selection<?>) item.toJpaSelection(root, query, cb))
+                .map(item -> item.toJpaSelection(root, query, cb))
                 .collect(Collectors.toList());
     }
 
     public static class SelectionsBuilder {
-        private List<Selection> selections;
+        private List<Selection<?>> selections;
 
         private SelectionsBuilder() {
             selections = new ArrayList<>();
@@ -59,7 +59,7 @@ public class Selections implements Iterable<Selection> {
         }
     }
 
-    public static class SimpleSelection implements Selection {
+    public static class SimpleSelection<P> implements Selection<P> {
         private String property;
         private String alias;
 
