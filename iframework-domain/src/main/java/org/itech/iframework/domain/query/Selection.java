@@ -36,7 +36,7 @@ public interface Selection<P> {
      * @param cb    criteriaBuilder
      * @return jpa selection
      */
-    default javax.persistence.criteria.Selection toJpaSelection(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+    default javax.persistence.criteria.Selection<?> toJpaSelection(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         return QueryUtils.toExpressionRecursively(root, PropertyPath.from(getProperty(), root.getJavaType()));
     }
 }

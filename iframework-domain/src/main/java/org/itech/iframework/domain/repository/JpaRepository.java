@@ -1,6 +1,6 @@
 package org.itech.iframework.domain.repository;
 
-import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.projection.DTO;
 import org.itech.iframework.domain.query.Selections;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.springframework.data.domain.Page;

@@ -1,8 +1,12 @@
 package org.itech.iframework.domain.query;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Selections
@@ -23,6 +27,12 @@ public class Selections implements Iterable<Selection> {
 
     public static SelectionsBuilder builder() {
         return new SelectionsBuilder();
+    }
+
+    public List<javax.persistence.criteria.Selection<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+        return selections.stream()
+                .map(item -> (javax.persistence.criteria.Selection<?>) item.toJpaSelection(root, query, cb))
+                .collect(Collectors.toList());
     }
 
     public static class SelectionsBuilder {

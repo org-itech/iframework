@@ -29,7 +29,7 @@ public class GroupBys implements Iterable<GroupBys.GroupBy> {
         return groupBys.iterator();
     }
 
-    public List<javax.persistence.criteria.Selection> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+    public List<javax.persistence.criteria.Selection<?>> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
         return groupBys.stream()
                 .map(item -> item.toJpaSelection(root, query, cb))
                 .collect(Collectors.toList());
@@ -103,7 +103,7 @@ public class GroupBys implements Iterable<GroupBys.GroupBy> {
         }
 
         @Override
-        public javax.persistence.criteria.Selection toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+        public javax.persistence.criteria.Selection<?> toJpaSelection(Root root, CriteriaQuery query, CriteriaBuilder cb) {
             return QueryUtils.toExpressionRecursively(root, PropertyPath.from(property, root.getJavaType()));
         }
     }

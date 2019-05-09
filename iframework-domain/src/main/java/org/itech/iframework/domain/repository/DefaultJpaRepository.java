@@ -1,24 +1,31 @@
 package org.itech.iframework.domain.repository;
 
-import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.projection.DTO;
+import org.itech.iframework.domain.projection.Projection;
 import org.itech.iframework.domain.query.Selections;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
+import org.itech.iframework.domain.util.QueryUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.mapping.PropertyPath;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
 
@@ -31,6 +38,7 @@ import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
 public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> implements JpaRepository<T, ID> {
+    private static ConcurrentHashMap<Class<?>, Selection<?>[]> selectionsCache = new ConcurrentHashMap<>(64);
     private final EntityManager em;
 
     public DefaultJpaRepository(JpaEntityInformation<T, ?> entityInformation,
@@ -151,7 +159,7 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
 
         Root<S> root = applySpecificationToCriteria(spec, domainClass, query);
 
-        query.select(builder.construct(dtoClass, getSelections(dtoClass)));
+        query.select(builder.construct(dtoClass, getSelections(root, builder, dtoClass)));
 
         if (sort.isSorted()) {
             query.orderBy(toOrders(sort, root, builder));
@@ -160,8 +168,54 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    private <D extends DTO<T>> Selection[] getSelections(Class<D> dtoClass) {
-        return new Selection[0];
+    protected <S extends T> TypedQuery<Tuple> getTupleQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, Selections selections) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> query = builder.createTupleQuery();
+
+        Root<S> root = applySpecificationToCriteria(spec, domainClass, query);
+
+        query.multiselect(selections.toJpaSelection(root, query, builder));
+
+        if (sort.isSorted()) {
+            query.orderBy(toOrders(sort, root, builder));
+        }
+
+        return applyRepositoryMethodMetadata(em.createQuery(query));
+    }
+
+    private <D extends DTO<T>, S extends T> Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
+        Selection<?>[] result = selectionsCache.get(dtoClass);
+
+        if (result == null) {
+            List<Selection<?>> selections = new ArrayList<>();
+
+            ReflectionUtils.doWithFields(dtoClass, field -> {
+                String property = field.getName();
+
+                Selection<?> selection;
+
+                Projection projection = field.getAnnotation(Projection.class);
+
+                if (projection != null) {
+                    if (!projection.ignore()) {
+                        selection = builder.nullLiteral(field.getType()).alias(property);
+                    } else {
+                        selection = QueryUtils.toExpressionRecursively(root, PropertyPath.from(projection.path(), root.getJavaType())).alias(property);
+                    }
+                } else {
+                    selection = root.get(property).alias(property);
+                }
+
+                selections.add(selection);
+            });
+
+            Selection<?>[] selectionArray = new Selection[selections.size()];
+            selections.toArray(selectionArray);
+
+            result = selectionsCache.putIfAbsent(dtoClass, selectionArray);
+        }
+
+        return result;
     }
 
     @SuppressWarnings("unchecked")
