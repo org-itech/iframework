@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
  * @param <P>
  * @author liuqiang
  */
-public interface Selection<P> {
+public interface Selection {
     /**
      * 获取属性名称
      *

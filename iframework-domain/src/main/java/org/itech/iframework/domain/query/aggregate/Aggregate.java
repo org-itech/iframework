@@ -8,7 +8,7 @@ import org.itech.iframework.domain.query.Selection;
  * @param <P>
  * @author liuqiang
  */
-public interface Aggregate<P> extends Selection<P> {
+public interface Aggregate extends Selection {
     /**
      * 获取聚合函数
      *

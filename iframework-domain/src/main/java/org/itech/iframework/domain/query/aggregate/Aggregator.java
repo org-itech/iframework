@@ -1,5 +1,7 @@
 package org.itech.iframework.domain.query.aggregate;
 
+import org.itech.iframework.domain.query.Selection;
+
 /**
  * Aggregator
  *
@@ -26,4 +28,11 @@ public interface Aggregator {
      * @return having
      */
     Having getHaving();
+
+    /**
+     * get selections
+     *
+     * @return selections
+     */
+    Iterable<Selection> getSelections();
 }

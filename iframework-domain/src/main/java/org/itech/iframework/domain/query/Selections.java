@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
  *
  * @author liuqiang
  */
-public class Selections implements Iterable<Selection<?>> {
-    private List<Selection<?>> selections;
+public class Selections implements Iterable<Selection> {
+    private List<Selection> selections;
 
-    private Selections(List<Selection<?>> selections) {
+    private Selections(List<Selection> selections) {
         this.selections = selections;
     }
 
     @Override
-    public Iterator<Selection<?>> iterator() {
+    public Iterator<Selection> iterator() {
         return selections.iterator();
     }
 
@@ -36,7 +36,7 @@ public class Selections implements Iterable<Selection<?>> {
     }
 
     public static class SelectionsBuilder {
-        private List<Selection<?>> selections;
+        private List<Selection> selections;
 
         private SelectionsBuilder() {
             selections = new ArrayList<>();
@@ -59,7 +59,7 @@ public class Selections implements Iterable<Selection<?>> {
         }
     }
 
-    public static class SimpleSelection<P> implements Selection<P> {
+    public static class SimpleSelection implements Selection {
         private String property;
         private String alias;
 

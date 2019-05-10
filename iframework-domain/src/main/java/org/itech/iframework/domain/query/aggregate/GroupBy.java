@@ -8,5 +8,5 @@ import org.itech.iframework.domain.query.Selection;
  * @param <P>
  * @author liuqiang
  */
-public interface GroupBy<P> extends Selection<P> {
+public interface GroupBy extends Selection {
 }

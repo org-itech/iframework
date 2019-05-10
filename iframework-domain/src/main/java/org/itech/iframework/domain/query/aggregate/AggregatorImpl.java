@@ -1,5 +1,6 @@
 package org.itech.iframework.domain.query.aggregate;
 
+import org.itech.iframework.domain.query.Selection;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -45,5 +46,16 @@ public class AggregatorImpl implements Aggregator {
     @Override
     public Having getHaving() {
         return this.having;
+    }
+
+    @Override
+    public Iterable<Selection> getSelections() {
+        List<Selection> selections = new ArrayList<>();
+
+        selections.addAll(this.getGroupBys());
+
+        selections.addAll(this.getAggregates());
+
+        return selections;
     }
 }
