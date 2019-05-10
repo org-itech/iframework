@@ -27,10 +27,6 @@ public class HavingImpl extends NumberFilter implements Having {
         return new HavingImpl(property, value, operator, fn);
     }
 
-    public static HavingBuidler buidler() {
-        return new HavingBuidler();
-    }
-
     @Override
     public AggregateFN getFn() {
         return fn;
@@ -47,29 +43,5 @@ public class HavingImpl extends NumberFilter implements Having {
         Expression ex = getFn().toExpression(path, cb);
 
         return getOperator().toPredicate(root, query, cb, ex, getProperty(), getValue());
-    }
-
-    public static class HavingBuidler {
-        private HavingImpl havingImpl;
-
-        public HavingBuidler and(String property, Object value, Operator operator, AggregateFN fn) {
-            if (havingImpl == null) {
-                havingImpl = HavingImpl.by(property, value, operator, fn);
-            } else {
-                havingImpl = (HavingImpl) havingImpl.and(HavingImpl.by(property, value, operator, fn));
-            }
-
-            return this;
-        }
-
-        public HavingBuidler or(String property, Object value, Operator operator, AggregateFN fn) {
-            if (havingImpl == null) {
-                havingImpl = HavingImpl.by(property, value, operator, fn);
-            } else {
-                havingImpl = (HavingImpl) havingImpl.or(HavingImpl.by(property, value, operator, fn));
-            }
-
-            return this;
-        }
     }
 }

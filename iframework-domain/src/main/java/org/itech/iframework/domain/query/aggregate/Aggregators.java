@@ -1,5 +1,7 @@
 package org.itech.iframework.domain.query.aggregate;
 
+import org.itech.iframework.domain.data.Operator;
+
 /**
  * Aggregators
  *
@@ -49,6 +51,18 @@ public class Aggregators {
 
         public AggregatorBuilder groupBy(String property, String alias) {
             this.aggregator.getGroupBys().add(GroupByImpl.by(property, alias));
+
+            return this;
+        }
+
+        public AggregatorBuilder having(Having having) {
+            this.aggregator.getHaving().and(having);
+
+            return this;
+        }
+
+        public AggregatorBuilder having(String property, Object value, Operator operator, AggregateFN fn) {
+            this.aggregator.getHaving().and(HavingImpl.by(property, value, operator, fn));
 
             return this;
         }
