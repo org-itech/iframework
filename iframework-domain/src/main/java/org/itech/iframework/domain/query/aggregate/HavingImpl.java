@@ -9,28 +9,29 @@ import org.springframework.util.Assert;
 import javax.persistence.criteria.*;
 
 /**
- * Havings
+ * HavingImpl
  *
  * @author liuqiang
  */
-public class Havings extends NumberFilter {
+public class HavingImpl extends NumberFilter implements Having {
     private AggregateFN fn;
 
-    private Havings(String property, Object value, Operator operator, AggregateFN fn) {
+    private HavingImpl(String property, Object value, Operator operator, AggregateFN fn) {
         super(property, value, operator);
         this.fn = fn;
 
         afterPropertySet();
     }
 
-    public static Havings by(String property, Object value, Operator operator, AggregateFN fn) {
-        return new Havings(property, value, operator, fn);
+    public static HavingImpl by(String property, Object value, Operator operator, AggregateFN fn) {
+        return new HavingImpl(property, value, operator, fn);
     }
 
     public static HavingBuidler buidler() {
         return new HavingBuidler();
     }
 
+    @Override
     public AggregateFN getFn() {
         return fn;
     }
@@ -49,23 +50,23 @@ public class Havings extends NumberFilter {
     }
 
     public static class HavingBuidler {
-        private Havings havings;
+        private HavingImpl havingImpl;
 
         public HavingBuidler and(String property, Object value, Operator operator, AggregateFN fn) {
-            if (havings == null) {
-                havings = Havings.by(property, value, operator, fn);
+            if (havingImpl == null) {
+                havingImpl = HavingImpl.by(property, value, operator, fn);
             } else {
-                havings = (Havings) havings.and(Havings.by(property, value, operator, fn));
+                havingImpl = (HavingImpl) havingImpl.and(HavingImpl.by(property, value, operator, fn));
             }
 
             return this;
         }
 
         public HavingBuidler or(String property, Object value, Operator operator, AggregateFN fn) {
-            if (havings == null) {
-                havings = Havings.by(property, value, operator, fn);
+            if (havingImpl == null) {
+                havingImpl = HavingImpl.by(property, value, operator, fn);
             } else {
-                havings = (Havings) havings.or(Havings.by(property, value, operator, fn));
+                havingImpl = (HavingImpl) havingImpl.or(HavingImpl.by(property, value, operator, fn));
             }
 
             return this;

@@ -1,7 +1,7 @@
 package org.itech.iframework.domain.repository;
 
 import org.itech.iframework.domain.projection.DTO;
-import org.itech.iframework.domain.query.Selections;
+import org.itech.iframework.domain.query.Selection;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -178,7 +178,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    Optional<Map<String, Object>> findById(String id, Selections selections);
+    Optional<Map<String, Object>> findById(String id, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -186,7 +186,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    List<Map<String, Object>> findAll(Selections selections);
+    List<Map<String, Object>> findAll(Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -195,7 +195,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    List<Map<String, Object>> findAllById(Iterable<String> ids, Selections selections);
+    List<Map<String, Object>> findAllById(Iterable<String> ids, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -204,7 +204,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    List<Map<String, Object>> findAll(Sort sort, Selections selections);
+    List<Map<String, Object>> findAll(Sort sort, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -213,7 +213,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    Page<Map<String, Object>> findAll(Pageable pageable, Selections selections);
+    Page<Map<String, Object>> findAll(Pageable pageable, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -222,7 +222,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    Optional<Map<String, Object>> findOne(Specification<T> spec, Selections selections);
+    Optional<Map<String, Object>> findOne(Specification<T> spec, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -231,7 +231,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    List<Map<String, Object>> findAll(Specification<T> spec, Selections selections);
+    List<Map<String, Object>> findAll(Specification<T> spec, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -241,7 +241,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Selections selections);
+    Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Iterable<Selection<?>> selections);
 
     /**
      * 获取指定数据
@@ -251,5 +251,5 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param selections selections
      * @return 指定数据
      */
-    List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Selections selections);
+    List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Iterable<Selection<?>> selections);
 }

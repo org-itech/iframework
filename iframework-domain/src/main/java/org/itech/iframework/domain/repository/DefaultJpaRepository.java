@@ -2,7 +2,7 @@ package org.itech.iframework.domain.repository;
 
 import org.itech.iframework.domain.projection.DTO;
 import org.itech.iframework.domain.projection.Projection;
-import org.itech.iframework.domain.query.Selections;
+import org.itech.iframework.domain.query.Selection;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.itech.iframework.domain.util.QueryUtils;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +41,7 @@ import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
 public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> implements JpaRepository<T, ID> {
-    private static ConcurrentHashMap<Class<?>, Selection<?>[]> selectionsCache = new ConcurrentHashMap<>(64);
+    private static ConcurrentHashMap<Class<?>, javax.persistence.criteria.Selection<?>[]> selectionsCache = new ConcurrentHashMap<>(64);
     private final EntityManager em;
 
     public DefaultJpaRepository(JpaEntityInformation<T, ?> entityInformation,
@@ -124,47 +127,47 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
     }
 
     @Override
-    public Optional<Map<String, Object>> findById(String id, Selections selections) {
+    public Optional<Map<String, Object>> findById(String id, Iterable<Selection<?>> selections) {
         return Optional.empty();
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Selections selections) {
+    public List<Map<String, Object>> findAll(Iterable<Selection<?>> selections) {
         return null;
     }
 
     @Override
-    public List<Map<String, Object>> findAllById(Iterable<String> ids, Selections selections) {
+    public List<Map<String, Object>> findAllById(Iterable<String> ids, Iterable<Selection<?>> selections) {
         return null;
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Sort sort, Selections selections) {
+    public List<Map<String, Object>> findAll(Sort sort, Iterable<Selection<?>> selections) {
         return null;
     }
 
     @Override
-    public Page<Map<String, Object>> findAll(Pageable pageable, Selections selections) {
+    public Page<Map<String, Object>> findAll(Pageable pageable, Iterable<Selection<?>> selections) {
         return null;
     }
 
     @Override
-    public Optional<Map<String, Object>> findOne(Specification<T> spec, Selections selections) {
+    public Optional<Map<String, Object>> findOne(Specification<T> spec, Iterable<Selection<?>> selections) {
         return Optional.empty();
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Specification<T> spec, Selections selections) {
+    public List<Map<String, Object>> findAll(Specification<T> spec, Iterable<Selection<?>> selections) {
         return null;
     }
 
     @Override
-    public Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Selections selections) {
+    public Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Iterable<Selection<?>> selections) {
         return null;
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Selections selections) {
+    public List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Iterable<Selection<?>> selections) {
         return null;
     }
 
@@ -183,7 +186,7 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    protected <S extends T> TypedQuery<Tuple> getTupleQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, List<Selection<?>> selections) {
+    protected <S extends T> TypedQuery<Tuple> getQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, List<javax.persistence.criteria.Selection<?>> selections) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = builder.createTupleQuery();
 
@@ -198,8 +201,8 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    protected <S extends T> TypedQuery<Tuple> getTupleQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, Aggregator aggregator) {
-        List<Selection<?>> selections = new ArrayList<>();
+    protected <S extends T> TypedQuery<Tuple> getQuery(@Nullable Specification<S> spec, Class<S> domainClass, Sort sort, Aggregator aggregator) {
+        List<javax.persistence.criteria.Selection<?>> selections = new ArrayList<>();
 
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = builder.createTupleQuery();
@@ -207,7 +210,10 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         Root<S> root = applySpecificationToCriteria(spec, domainClass, query);
 
         if (aggregator.getGroupBys() != null) {
-            List<Expression<?>> groupBySelections = aggregator.getGroupBys().toJpaSelection(root, query, builder);
+            List<javax.persistence.criteria.Expression<?>> groupBySelections = new ArrayList<>();
+
+            //noinspection unchecked
+            aggregator.getGroupBys().forEach(item -> groupBySelections.add(item.toJpaSelection(root, query, builder)));
 
             selections.addAll(groupBySelections);
 
@@ -215,11 +221,16 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         }
 
         if (aggregator.getAggregates() != null) {
-            selections.addAll(aggregator.getAggregates().toJpaSelection(root, query, builder));
+            List<javax.persistence.criteria.Expression<?>> aggregateSelections = new ArrayList<>();
+
+            //noinspection unchecked
+            aggregator.getAggregates().forEach(item -> aggregateSelections.add(item.toJpaSelection(root, query, builder)));
+
+            selections.addAll(aggregateSelections);
         }
 
-        if (aggregator.getHavings() != null) {
-            query.having(aggregator.getHavings().toPredicate(root, query, builder));
+        if (aggregator.getHaving() != null) {
+            query.having(aggregator.getHaving().toPredicate(root, query, builder));
         }
 
         query.multiselect(selections);
@@ -231,16 +242,16 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    private <D extends DTO<T>, S extends T> Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
-        Selection<?>[] result = selectionsCache.get(dtoClass);
+    private <D extends DTO<T>, S extends T> javax.persistence.criteria.Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
+        javax.persistence.criteria.Selection<?>[] result = selectionsCache.get(dtoClass);
 
         if (result == null) {
-            List<Selection<?>> selections = new ArrayList<>();
+            List<javax.persistence.criteria.Selection<?>> selections = new ArrayList<>();
 
             ReflectionUtils.doWithFields(dtoClass, field -> {
                 String property = field.getName();
 
-                Selection<?> selection;
+                javax.persistence.criteria.Selection<?> selection;
 
                 Projection projection = field.getAnnotation(Projection.class);
 
@@ -257,7 +268,7 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
                 selections.add(selection);
             });
 
-            Selection<?>[] selectionArray = new Selection[selections.size()];
+            javax.persistence.criteria.Selection<?>[] selectionArray = new javax.persistence.criteria.Selection[selections.size()];
             selections.toArray(selectionArray);
 
             result = selectionsCache.putIfAbsent(dtoClass, selectionArray);
