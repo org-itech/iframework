@@ -5,7 +5,6 @@ import org.itech.iframework.domain.query.Selection;
 /**
  * Aggregate
  *
- * @param <P>
  * @author liuqiang
  */
 public interface Aggregate extends Selection {

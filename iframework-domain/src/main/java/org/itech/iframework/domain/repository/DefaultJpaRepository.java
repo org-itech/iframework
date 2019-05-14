@@ -102,8 +102,6 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
 
     @Override
     public <D extends DTO<T>> Optional<D> findById(ID id, Class<D> dtoClass) {
-        entityInformation.getIdAttribute().getName();
-
         return Optional.empty();
     }
 
@@ -339,5 +337,33 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
         }
 
         return total;
+    }
+
+    class IdSpecification implements Specification<T> {
+        private final ID id;
+
+        IdSpecification(ID id) {
+            this.id = id;
+        }
+
+        @Override
+        public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            Predicate predicate = null;
+            if (!entityInformation.hasCompositeId()) {
+                predicate = cb.equal(root.get(entityInformation.getIdAttribute()), id);
+            } else {
+                for (String attribute : entityInformation.getIdAttributeNames()) {
+                    Object value = entityInformation.getCompositeIdAttributeValue(id, attribute);
+
+                    if (predicate != null) {
+                        predicate = cb.and(predicate, cb.equal(root.get(attribute), value));
+                    } else {
+                        predicate = cb.equal(root.get(attribute), value);
+                    }
+                }
+            }
+
+            return predicate;
+        }
     }
 }

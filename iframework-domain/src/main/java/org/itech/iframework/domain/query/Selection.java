@@ -10,7 +10,6 @@ import javax.persistence.criteria.Root;
 /**
  * Selection
  *
- * @param <P>
  * @author liuqiang
  */
 public interface Selection {
