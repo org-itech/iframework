@@ -1,5 +1,6 @@
 package org.itech.iframework.domain.util;
 
+import org.itech.iframework.domain.query.Selection;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mapping.PropertyPath;
 import org.springframework.lang.Nullable;
@@ -17,7 +18,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static javax.persistence.metamodel.Attribute.PersistentAttributeType.*;
 
@@ -42,6 +46,12 @@ public final class QueryUtils {
 
     public static Expression<?> toExpressionRecursively(From<?, ?> from, PropertyPath property) {
         return toExpressionRecursively(from, property, false);
+    }
+
+    public static List<javax.persistence.criteria.Selection<?>> toJpaSelections(Iterable<Selection> selections, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        return StreamSupport.stream(selections.spliterator(), false)
+                .map(item -> item.toJpaSelection(root, query, cb))
+                .collect(Collectors.toList());
     }
 
     @SuppressWarnings("ConstantConditions")
