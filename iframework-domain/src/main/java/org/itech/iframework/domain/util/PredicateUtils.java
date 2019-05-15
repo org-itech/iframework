@@ -1,10 +1,10 @@
 package org.itech.iframework.domain.util;
 
-import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.model.AbstractTreeAggregateRoot_;
 import org.itech.iframework.domain.model.AbstractTreePath_;
 import org.itech.iframework.domain.model.TreeNode;
 import org.springframework.core.ResolvableType;
+import org.springframework.util.Assert;
 
 import javax.persistence.criteria.*;
 
@@ -53,9 +53,7 @@ public final class PredicateUtils {
     static Predicate getDesPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth, boolean containSelf) {
         Class treeClazz = ((Path) expression).getParentPath().getJavaType();
 
-        if (!TreeNode.class.isAssignableFrom(treeClazz)) {
-            throw new DomainException("非树实体无法使用子代操作符！");
-        }
+        Assert.isAssignable(TreeNode.class, treeClazz, "非树实体无法使用子代操作符！");
 
         Join ancestorJoin = null;
 
@@ -115,9 +113,7 @@ public final class PredicateUtils {
     static Predicate getAncPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value, Long depth, boolean containSelf) {
         Class treeClazz = ((Path) expression).getParentPath().getJavaType();
 
-        if (!TreeNode.class.isAssignableFrom(treeClazz)) {
-            throw new DomainException("非树实体无法使用父代操作符！");
-        }
+        Assert.isAssignable(TreeNode.class, treeClazz, "非树实体无法使用父代操作符！");
 
         Join descendantJoin = null;
         String[] props = property.split(PROPERTY_DELIMITER);

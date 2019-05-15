@@ -1,6 +1,5 @@
 package org.itech.iframework.domain.query.filter;
 
-import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.constant.DomainConstants;
 import org.itech.iframework.domain.data.DataType;
 import org.itech.iframework.domain.data.Operator;
@@ -95,10 +94,6 @@ public abstract class AbstractFilterItem extends AbstractFilter implements Filte
         Assert.isTrue(dataType.isSupportedOperator(operator), "数据类型 " + dataType.getName() + " 不支持 " + operator.getName() + " 操作符！");
 
         if (operator == Operator.BTW || operator == Operator.IN || operator == Operator.NOT_IN) {
-            if (getValue() == null) {
-                throw new DomainException("筛选器值错误，操作符 " + operator.getCode() + " 的值不能为空！");
-            }
-
             Assert.notNull(value, "操作符是 " + operator.getName() + " 时，值不能为空！");
 
             Assert.isTrue(List.class.isAssignableFrom(getValue().getClass()), "操作符是 " + operator.getName() + " 时，值应该为数组！");

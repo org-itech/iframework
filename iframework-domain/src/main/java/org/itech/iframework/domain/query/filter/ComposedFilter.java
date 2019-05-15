@@ -1,6 +1,6 @@
 package org.itech.iframework.domain.query.filter;
 
-import org.itech.iframework.domain.DomainException;
+import org.springframework.util.Assert;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,17 +29,9 @@ public class ComposedFilter extends AbstractFilter {
     private final Filter right;
 
     public ComposedFilter(Filter left, Filter right, Connector connector) {
-        if (left == null) {
-            throw new DomainException("左侧筛选器 left 不能为空!");
-        }
-
-        if (right == null) {
-            throw new DomainException("右侧筛选器 right 不能为空!");
-        }
-
-        if (connector == null) {
-            throw new DomainException("连接器 connector 不能为空!");
-        }
+        Assert.notNull(left, "左侧筛选器 left 不能为空！");
+        Assert.notNull(right, "右侧筛选器 right 不能为空！");
+        Assert.notNull(connector, "连接器 connector 不能为空！");
 
         this.connector = connector;
         this.left = left;

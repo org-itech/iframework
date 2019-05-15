@@ -57,8 +57,13 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public <S extends T> S saveAndRefresh(S entity) {
-        return null;
+        this.save(entity);
+
+        em.refresh(entity);
+
+        return entity;
     }
 
     @Override
@@ -418,7 +423,6 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
 
         return query;
     }
-
 
     private static long executeCountQuery(TypedQuery<Long> query) {
 
