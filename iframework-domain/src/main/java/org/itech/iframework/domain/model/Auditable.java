@@ -11,7 +11,7 @@ import java.util.Optional;
  * @param <T>
  * @author liuqiang
  */
-public interface Auditable<UID, U extends Persistable<UID>, ID, T> extends Persistable<ID> {
+public interface Auditable<UID, U, ID, T> extends Persistable<ID> {
     /**
      * 获取 创建人标识
      *
