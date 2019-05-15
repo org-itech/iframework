@@ -17,7 +17,7 @@ import java.util.Optional;
  * @author liuqiang
  */
 @MappedSuperclass
-public abstract class AbstractAuditableAggregateRoot extends AbstractAggregateRoot implements Auditable<String, User, String, Date> {
+public abstract class AbstractAuditableAggregateRoot<U extends User> extends AbstractAggregateRoot implements Auditable<String, U, String, Date> {
     /**
      * 创建人标识
      */
@@ -48,13 +48,13 @@ public abstract class AbstractAuditableAggregateRoot extends AbstractAggregateRo
      * 创建人
      */
     @Transient
-    private User createdBy;
+    private U createdBy;
 
     /**
      * 修改人
      */
     @Transient
-    private User lastModifiedBy;
+    private U lastModifiedBy;
 
     @Override
     public Optional<String> getCreatedById() {
@@ -67,7 +67,7 @@ public abstract class AbstractAuditableAggregateRoot extends AbstractAggregateRo
     }
 
     @Override
-    public Optional<User> getCreatedBy() {
+    public Optional<U> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractAuditableAggregateRoot extends AbstractAggregateRo
     }
 
     @Override
-    public Optional<User> getLastModifiedBy() {
+    public Optional<U> getLastModifiedBy() {
         return Optional.ofNullable(lastModifiedBy);
     }
 
@@ -106,11 +106,11 @@ public abstract class AbstractAuditableAggregateRoot extends AbstractAggregateRo
         this.lastModifiedOn = lastModifiedOn;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(U createdBy) {
         this.createdBy = createdBy;
     }
 
-    public void setLastModifiedBy(User lastModifiedBy) {
+    public void setLastModifiedBy(U lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 }

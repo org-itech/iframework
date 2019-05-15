@@ -20,9 +20,10 @@ import java.util.Optional;
  */
 @MappedSuperclass
 public abstract class AbstractAuditableTreeAggregateRoot<Path extends AbstractTreePath<Path, Node>
-        , Node extends AbstractAuditableTreeAggregateRoot<Path, Node>>
+        , Node extends AbstractAuditableTreeAggregateRoot<Path, Node, U>
+        , U extends User>
         extends AbstractTreeAggregateRoot<Path, Node>
-        implements Auditable<String, User, String, Date> {
+        implements Auditable<String, U, String, Date> {
     /**
      * 创建人标识
      */
@@ -53,13 +54,13 @@ public abstract class AbstractAuditableTreeAggregateRoot<Path extends AbstractTr
      * 创建人
      */
     @Transient
-    private User createdBy;
+    private U createdBy;
 
     /**
      * 修改人
      */
     @Transient
-    private User lastModifiedBy;
+    private U lastModifiedBy;
 
     @Override
     public Optional<String> getCreatedById() {
@@ -72,7 +73,7 @@ public abstract class AbstractAuditableTreeAggregateRoot<Path extends AbstractTr
     }
 
     @Override
-    public Optional<User> getCreatedBy() {
+    public Optional<U> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
@@ -97,7 +98,7 @@ public abstract class AbstractAuditableTreeAggregateRoot<Path extends AbstractTr
     }
 
     @Override
-    public Optional<User> getLastModifiedBy() {
+    public Optional<U> getLastModifiedBy() {
         return Optional.ofNullable(lastModifiedBy);
     }
 
@@ -111,11 +112,11 @@ public abstract class AbstractAuditableTreeAggregateRoot<Path extends AbstractTr
         this.lastModifiedOn = lastModifiedOn;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(U createdBy) {
         this.createdBy = createdBy;
     }
 
-    public void setLastModifiedBy(User lastModifiedBy) {
+    public void setLastModifiedBy(U lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 }

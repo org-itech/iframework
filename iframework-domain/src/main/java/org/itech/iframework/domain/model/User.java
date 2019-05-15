@@ -5,44 +5,25 @@ package org.itech.iframework.domain.model;
  *
  * @author liuqiang
  */
-public class User implements Persistable<String> {
+public interface User {
     /**
-     * 用户标识
+     * 获取用户标识
+     *
+     * @return 用户标识
      */
-    private String id;
-
-    /**
-     * 名称
-     */
-    private String name;
+    String getId();
 
     /**
-     * 代码
+     * 获取用户名称
+     *
+     * @return 用户名称
      */
-    private String code;
+    String getName();
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    /**
+     * 获取用户代码
+     *
+     * @return 用户代码
+     */
+    String getCode();
 }
