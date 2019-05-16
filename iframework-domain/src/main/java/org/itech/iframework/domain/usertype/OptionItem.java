@@ -21,6 +21,13 @@ public interface OptionItem {
     Long getValue();
 
     /**
+     * set value
+     *
+     * @param value value
+     */
+    void setValue(Long value);
+
+    /**
      * get option
      *
      * @return option

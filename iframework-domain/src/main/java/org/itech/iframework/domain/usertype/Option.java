@@ -1,5 +1,7 @@
 package org.itech.iframework.domain.usertype;
 
+import java.util.List;
+
 /**
  * Option
  *
@@ -25,7 +27,7 @@ public interface Option {
      *
      * @return items
      */
-    String getItems();
+    List<OptionItem> getItems();
 
     /**
      * 是否支持位运算
