@@ -59,7 +59,7 @@ public class OptionType implements DynamicParameterizedType, UserType {
             Long value = resultSet.getLong(names[0]);
 
             try {
-                result = ReflectionUtils.accessibleConstructor(returnClass, Long.class).newInstance(value);
+                result = ReflectionUtils.accessibleConstructor(returnClass).newInstance(value);
             } catch (Exception ex) {
                 throw new DomainException(ex);
             }
