@@ -4,6 +4,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
+import org.itech.iframework.domain.DomainException;
+import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -19,7 +21,7 @@ import java.util.Properties;
  * @author liuqiang
  */
 public class OptionType implements DynamicParameterizedType, UserType {
-    private Class returnClass;
+    private Class<?> returnClass;
 
     @Override
     public void setParameterValues(Properties properties) {
@@ -35,7 +37,7 @@ public class OptionType implements DynamicParameterizedType, UserType {
 
     @Override
     public Class returnedClass() {
-        return OptionItem.class;
+        return returnClass;
     }
 
     @Override
@@ -49,37 +51,56 @@ public class OptionType implements DynamicParameterizedType, UserType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
-        return null;
+    public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o)
+            throws HibernateException, SQLException {
+        Object result = null;
+
+        if (resultSet.getObject(names[0]) != null) {
+            Long value = resultSet.getLong(names[0]);
+
+            try {
+                result = ReflectionUtils.accessibleConstructor(returnClass, Long.class).newInstance(value);
+            } catch (Exception ex) {
+                throw new DomainException(ex);
+            }
+        }
+
+        return result;
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement preparedStatement, Object o, int i, SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index, SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException, SQLException {
+        if (value == null) {
+            preparedStatement.setNull(index, Types.BIGINT);
+        } else {
+            OptionItem optionItem = ((OptionItem) value);
 
+            preparedStatement.setLong(index, optionItem.getValue());
+        }
     }
 
     @Override
     public Object deepCopy(Object o) throws HibernateException {
-        return null;
+        return o;
     }
 
     @Override
     public boolean isMutable() {
-        return false;
+        return true;
     }
 
     @Override
-    public Serializable disassemble(Object o) throws HibernateException {
-        return null;
+    public Serializable disassemble(Object value) throws HibernateException {
+        return (Serializable) value;
     }
 
     @Override
-    public Object assemble(Serializable serializable, Object o) throws HibernateException {
-        return null;
+    public Object assemble(Serializable cached, Object o) throws HibernateException {
+        return cached;
     }
 
     @Override
-    public Object replace(Object o, Object o1, Object o2) throws HibernateException {
-        return null;
+    public Object replace(Object original, Object target, Object owner) throws HibernateException {
+        return original;
     }
 }
