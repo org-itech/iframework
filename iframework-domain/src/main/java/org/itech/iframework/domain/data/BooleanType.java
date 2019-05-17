@@ -5,7 +5,7 @@ package org.itech.iframework.domain.data;
  *
  * @author liuqiang
  */
-public enum BooleanType implements IEnum<BooleanType> {
+public enum BooleanType implements BitEnum<BooleanType> {
     /**
      * 双态
      */

@@ -5,9 +5,8 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
 import org.itech.iframework.domain.DomainException;
-import org.itech.iframework.domain.data.OptionItem;
+import org.itech.iframework.domain.data.BitEnum;
 import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -22,16 +21,15 @@ import java.util.Properties;
  *
  * @author liuqiang
  */
-public class OptionType implements DynamicParameterizedType, UserType {
-    private Class<?> returnClass;
+public class BitEnumType implements DynamicParameterizedType, UserType {
+    private Class<?> enumType;
 
     @Override
     public void setParameterValues(Properties properties) {
         ParameterType params = (ParameterType) properties.get(PARAMETER_TYPE);
+        enumType = params.getReturnedClass();
 
-        returnClass = params.getReturnedClass();
-
-        Assert.isAssignable(OptionItem.class, returnClass);
+        Assert.isAssignable(BitEnum.class, enumType);
     }
 
     @Override
@@ -41,12 +39,12 @@ public class OptionType implements DynamicParameterizedType, UserType {
 
     @Override
     public Class returnedClass() {
-        return returnClass;
+        return enumType;
     }
 
     @Override
-    public boolean equals(Object o, Object o1) throws HibernateException {
-        return Objects.equals(o, o1);
+    public boolean equals(Object x, Object y) throws HibernateException {
+        return Objects.equals(x, y);
     }
 
     @Override
@@ -55,21 +53,24 @@ public class OptionType implements DynamicParameterizedType, UserType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o)
-            throws HibernateException, SQLException {
-        Object result = null;
-
+    public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
         if (resultSet.getObject(names[0]) != null) {
-            Long value = resultSet.getLong(names[0]);
+            Long value;
 
-            try {
-                result = ReflectionUtils.accessibleConstructor(returnClass).newInstance(value);
-            } catch (Exception ex) {
-                throw new DomainException(ex);
+            value = resultSet.getLong(names[0]);
+
+            for (Object obj : returnedClass().getEnumConstants()) {
+                if (obj instanceof BitEnum) {
+                    if (((BitEnum) obj).getValue().equals(value)) {
+                        return obj;
+                    }
+                }
             }
-        }
 
-        return result;
+            throw new DomainException("未知的值：" + returnedClass().getSimpleName());
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -77,20 +78,18 @@ public class OptionType implements DynamicParameterizedType, UserType {
         if (value == null) {
             preparedStatement.setNull(index, Types.BIGINT);
         } else {
-            OptionItem optionItem = ((OptionItem) value);
-
-            preparedStatement.setLong(index, optionItem.getValue());
+            preparedStatement.setLong(index, ((BitEnum) value).getValue());
         }
     }
 
     @Override
-    public Object deepCopy(Object o) throws HibernateException {
-        return o;
+    public Object deepCopy(Object value) throws HibernateException {
+        return value;
     }
 
     @Override
     public boolean isMutable() {
-        return true;
+        return false;
     }
 
     @Override

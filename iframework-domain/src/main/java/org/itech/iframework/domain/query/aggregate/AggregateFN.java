@@ -1,6 +1,6 @@
 package org.itech.iframework.domain.query.aggregate;
 
-import org.itech.iframework.domain.data.IEnum;
+import org.itech.iframework.domain.data.BitEnum;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -11,7 +11,7 @@ import javax.persistence.criteria.Expression;
  * @author liuqiang
  */
 @SuppressWarnings("unchecked")
-public enum AggregateFN implements IEnum<AggregateFN> {
+public enum AggregateFN implements BitEnum<AggregateFN> {
     /**
      * 求和
      */

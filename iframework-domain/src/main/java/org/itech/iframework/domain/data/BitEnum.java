@@ -1,12 +1,12 @@
 package org.itech.iframework.domain.data;
 
 /**
- * IEnum
+ * BitEnum
  *
  * @author liuqiang
  */
 @SuppressWarnings("unchecked")
-public interface IEnum<T extends Enum<T>> {
+public interface BitEnum<T extends Enum<T>> {
     /**
      * 获取名称
      *

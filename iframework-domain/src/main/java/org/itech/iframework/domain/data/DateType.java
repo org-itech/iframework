@@ -5,7 +5,7 @@ package org.itech.iframework.domain.data;
  *
  * @author liuqiang
  */
-public enum DateType implements IEnum<DateType> {
+public enum DateType implements BitEnum<DateType> {
     /**
      * 日期
      */

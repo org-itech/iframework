@@ -194,6 +194,8 @@ public class DefaultJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> impl
 
     @Override
     public Optional<Map<String, Object>> findById(ID id, Iterable<Selection> selections) {
+        Assert.notNull(id, ID_NOT_NULL);
+
         TypedQuery<Tuple> query = getQuery(new IdSpecification(id), getDomainClass(), Sort.unsorted(), selections);
 
         try {

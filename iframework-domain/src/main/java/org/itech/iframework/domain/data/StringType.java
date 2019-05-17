@@ -5,7 +5,7 @@ package org.itech.iframework.domain.data;
  *
  * @author liuqiang
  */
-public enum StringType implements IEnum<StringType> {
+public enum StringType implements BitEnum<StringType> {
     /**
      * 字符串
      * 主要用于短文本

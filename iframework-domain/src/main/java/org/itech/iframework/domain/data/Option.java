@@ -1,4 +1,4 @@
-package org.itech.iframework.domain.usertype;
+package org.itech.iframework.domain.data;
 
 import java.util.List;
 

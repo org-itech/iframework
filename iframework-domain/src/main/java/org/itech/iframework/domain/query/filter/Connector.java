@@ -1,14 +1,14 @@
 package org.itech.iframework.domain.query.filter;
 
 
-import org.itech.iframework.domain.data.IEnum;
+import org.itech.iframework.domain.data.BitEnum;
 
 /**
  * 连接器
  *
  * @author liuqiang
  */
-public enum Connector implements IEnum<Connector> {
+public enum Connector implements BitEnum<Connector> {
     /**
      * 与
      */

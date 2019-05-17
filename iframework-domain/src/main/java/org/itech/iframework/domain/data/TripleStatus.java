@@ -5,7 +5,7 @@ package org.itech.iframework.domain.data;
  *
  * @author liuqiang
  */
-public enum TripleStatus implements IEnum<DualStatus> {
+public enum TripleStatus implements BitEnum<DualStatus> {
     /**
      * 新建
      */

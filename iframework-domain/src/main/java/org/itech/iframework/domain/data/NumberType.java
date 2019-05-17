@@ -5,7 +5,7 @@ package org.itech.iframework.domain.data;
  *
  * @author liuqiang
  */
-public enum NumberType implements IEnum<NumberType> {
+public enum NumberType implements BitEnum<NumberType> {
     /**
      * SHORT
      * -32768 ~ 32767

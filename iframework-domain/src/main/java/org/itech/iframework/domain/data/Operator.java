@@ -14,7 +14,7 @@ import static org.itech.iframework.domain.constant.DomainConstants.MATCH_FUNCTIO
  * @author liuqiang
  */
 @SuppressWarnings("unchecked")
-public enum Operator implements IEnum<Operator> {
+public enum Operator implements BitEnum<Operator> {
     /**
      * 等于
      */

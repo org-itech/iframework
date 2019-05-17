@@ -8,7 +8,7 @@ import java.util.EnumSet;
  *
  * @author liuqiang
  */
-public enum DataSubType implements IEnum<DataSubType> {
+public enum DataSubType implements BitEnum<DataSubType> {
     /**
      * 字符串
      * 主要用于短文本
