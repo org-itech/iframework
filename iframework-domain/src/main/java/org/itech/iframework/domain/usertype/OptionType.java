@@ -5,6 +5,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
 import org.itech.iframework.domain.DomainException;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
@@ -28,6 +29,8 @@ public class OptionType implements DynamicParameterizedType, UserType {
         ParameterType params = (ParameterType) properties.get(PARAMETER_TYPE);
 
         returnClass = params.getReturnedClass();
+
+        Assert.isAssignable(OptionItem.class, returnClass);
     }
 
     @Override
