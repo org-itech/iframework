@@ -1,18 +1,21 @@
 package org.itech.iframework.domain.usertype;
 
 import org.hibernate.HibernateException;
+import org.hibernate.annotations.common.reflection.java.JavaXMember;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
-import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.data.BitEnum;
+import org.itech.iframework.domain.util.BitEnumUtils;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -21,13 +24,21 @@ import java.util.Properties;
  *
  * @author liuqiang
  */
-public class BitEnumSetType implements DynamicParameterizedType, UserType {
-    private Class<?> enumType;
+public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicParameterizedType, UserType {
+    private Class<E> enumType;
 
     @Override
     public void setParameterValues(Properties properties) {
         ParameterType params = (ParameterType) properties.get(PARAMETER_TYPE);
-        enumType = params.getReturnedClass();
+
+        Class returnedClass = params.getReturnedClass();
+
+        Assert.isAssignable(EnumSet.class, returnedClass);
+
+        JavaXMember member = (JavaXMember) properties.get(XPROPERTY);
+
+        //noinspection unchecked
+        enumType = (Class<E>) ((ParameterizedType) member.getJavaType()).getActualTypeArguments()[0];
 
         Assert.isAssignable(BitEnum.class, enumType);
     }
@@ -55,19 +66,9 @@ public class BitEnumSetType implements DynamicParameterizedType, UserType {
     @Override
     public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
         if (resultSet.getObject(names[0]) != null) {
-            Long value;
+            long value = resultSet.getLong(names[0]);
 
-            value = resultSet.getLong(names[0]);
-
-            for (Object obj : returnedClass().getEnumConstants()) {
-                if (obj instanceof BitEnum) {
-                    if (((BitEnum) obj).getValue().equals(value)) {
-                        return obj;
-                    }
-                }
-            }
-
-            throw new DomainException("未知的值：" + returnedClass().getSimpleName());
+            return BitEnumUtils.getEnumSet(enumType, value);
         } else {
             return null;
         }

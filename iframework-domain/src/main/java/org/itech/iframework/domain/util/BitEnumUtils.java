@@ -13,7 +13,6 @@ import java.util.EnumSet;
 public class BitEnumUtils {
     private static String ENUMS_NOT_NULL = "参数 enums 不能为空！";
     private static String BIT_ENUM_SIZE_SHOULD_LESS_THEN_64 = "BitEnum枚举的大小应小于等于64！";
-    private static String VALUE_SHOULD_GREATE_THEN_ONE = "参数 value 的值应大于等于！";
     private static int DOUBLE = 2;
 
     /**
@@ -50,7 +49,6 @@ public class BitEnumUtils {
      * @return enum
      */
     public static <E extends Enum<E> & BitEnum<E>> E getEnum(Class<E> clazz, long value) {
-        Assert.isTrue(value >= 1, VALUE_SHOULD_GREATE_THEN_ONE);
         Assert.isTrue(isBitwise(clazz), BIT_ENUM_SIZE_SHOULD_LESS_THEN_64);
 
         for (E item : clazz.getEnumConstants()) {
@@ -70,8 +68,7 @@ public class BitEnumUtils {
      * @param <E>   e
      * @return enum
      */
-    public static <E extends Enum<E> & BitEnum<E>> EnumSet<E> getEnums(Class<E> clazz, long value) {
-        Assert.isTrue(value >= 1, VALUE_SHOULD_GREATE_THEN_ONE);
+    public static <E extends Enum<E> & BitEnum<E>> EnumSet<E> getEnumSet(Class<E> clazz, long value) {
         Assert.isTrue(isBitwise(clazz), BIT_ENUM_SIZE_SHOULD_LESS_THEN_64);
 
         EnumSet<E> result = EnumSet.noneOf(clazz);
