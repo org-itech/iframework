@@ -79,9 +79,13 @@ public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicPa
         if (value == null) {
             preparedStatement.setNull(index, Types.BIGINT);
         } else {
-            preparedStatement.setLong(index, ((BitEnum) value).getValue());
+            EnumSet data = (EnumSet) value;
+
+            //noinspection unchecked
+            preparedStatement.setLong(index, BitEnumUtils.or(enumType, data));
         }
     }
+
 
     @Override
     public Object deepCopy(Object value) throws HibernateException {
