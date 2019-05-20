@@ -9,19 +9,67 @@ import org.springframework.util.Assert;
  * @author liuqiang
  */
 public class BitEnumUtils {
+    private static String ENUMS_NOT_NULL = "参数 enums 不能为空！";
+    private static String BIT_ENUM_SIZE_SHOULD_LESS_THEN_64 = "BitEnum枚举的大小应小于等于64！";
+    private static String VALUE_SHOULD_GREATE_THEN_ONE = "参数 value 的值应大于等于！";
+
     /**
-     * 按位或
+     * 按位与
      *
-     * @param enums
-     * @param <E>   enum type
-     * @return 结果
+     * @param clazz transactionId
+     * @param enums enums
+     * @param <E>   E
+     * @return 按位与
      */
-    public static <E extends Enum<E> & BitEnum<E>> long or(E... enums) {
-        Assert.notEmpty(enums, "参数 enums 不能为空！");
+    @SafeVarargs
+    public static <E extends Enum<E> & BitEnum<E>> long or(Class<E> clazz, E... enums) {
+        Assert.notEmpty(enums, ENUMS_NOT_NULL);
+        Assert.isTrue(isBitwise(clazz), BIT_ENUM_SIZE_SHOULD_LESS_THEN_64);
 
-        Long result = 0L;
+        long result = 0;
 
+        for (E item : enums) {
+            if (result == 0) {
+                result = item.getValue();
+            } else {
+                result |= item.getValue();
+            }
+        }
 
         return result;
+    }
+
+    /**
+     * parse enum
+     *
+     * @param clazz clazz
+     * @param value value
+     * @param <E>   e
+     * @return enum
+     */
+    public static <E extends Enum<E> & BitEnum<E>> E parse(Class<E> clazz, long value) {
+        Assert.isTrue(value >= 1, VALUE_SHOULD_GREATE_THEN_ONE);
+        Assert.isTrue(isBitwise(clazz), BIT_ENUM_SIZE_SHOULD_LESS_THEN_64);
+
+        for (E item : clazz.getEnumConstants()) {
+            if (item.getValue() == value) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 是否支持位运算
+     *
+     * @param clazz clazz
+     * @param <E>   e
+     * @return 是否支持位运算
+     */
+    public static <E extends Enum<E> & BitEnum<E>> boolean isBitwise(Class<E> clazz) {
+        int enumSize = clazz.getEnumConstants().length;
+
+        return enumSize <= Long.SIZE;
     }
 }
