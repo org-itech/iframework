@@ -17,11 +17,11 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * BitEnumType
+ * BitEnumSetType
  *
  * @author liuqiang
  */
-public class BitEnumType implements DynamicParameterizedType, UserType {
+public class BitEnumSetType implements DynamicParameterizedType, UserType {
     private Class<?> enumType;
 
     @Override
