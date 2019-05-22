@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author liuqiang
  */
-public interface Option {
+public interface Option<Item extends OptionItem> {
     /**
      * get name
      *
@@ -27,7 +27,7 @@ public interface Option {
      *
      * @return items
      */
-    List<OptionItem> getItems();
+    List<Item> getItems();
 
     /**
      * 是否支持位运算

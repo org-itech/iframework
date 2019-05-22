@@ -10,6 +10,7 @@ import java.util.EnumSet;
  *
  * @author liuqiang
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class BitEnumUtils {
     private static String ENUMS_NOT_NULL = "参数 enums 不能为空！";
     private static String BIT_ENUM_SIZE_SHOULD_LESS_THEN_64 = "BitEnum枚举的大小应小于等于64！";
@@ -23,7 +24,7 @@ public class BitEnumUtils {
      * @param <E>   E
      * @return 按位与
      */
-    public static <E extends Enum<E> & BitEnum<E>> long or(Class<E> clazz, Iterable<E> enums) {
+    public static <E extends Enum<E> & BitEnum<E>> long getValue(Class<E> clazz, Iterable<E> enums) {
         Assert.notNull(enums, ENUMS_NOT_NULL);
         Assert.isTrue(isBitwise(clazz), BIT_ENUM_SIZE_SHOULD_LESS_THEN_64);
 

@@ -22,6 +22,8 @@ public enum Operator implements BitEnum<Operator> {
         @Override
         public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
             if (value == null) {
+                OptionSet set = new OptionSet();
+
                 return expression.isNull();
             } else {
                 return cb.equal(expression, value);

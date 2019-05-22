@@ -5,8 +5,9 @@ import org.hibernate.annotations.common.reflection.java.JavaXMember;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
-import org.itech.iframework.domain.data.BitEnum;
-import org.itech.iframework.domain.util.BitEnumUtils;
+import org.itech.iframework.domain.data.OptionItem;
+import org.itech.iframework.domain.data.OptionSet;
+import org.itech.iframework.domain.util.OptionUtils;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 
@@ -24,8 +25,8 @@ import java.util.Properties;
  *
  * @author liuqiang
  */
-public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicParameterizedType, UserType {
-    private Class<E> enumType;
+public class OptionSetType<O extends OptionItem> implements DynamicParameterizedType, UserType {
+    private Class<O> optionType;
 
     @Override
     public void setParameterValues(Properties properties) {
@@ -38,9 +39,7 @@ public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicPa
         JavaXMember member = (JavaXMember) properties.get(XPROPERTY);
 
         //noinspection unchecked
-        enumType = (Class<E>) ResolvableType.forType(member.getJavaType()).getGeneric(0).resolve();
-
-        Assert.isAssignable(BitEnum.class, enumType);
+        optionType = (Class<O>) ResolvableType.forType(member.getJavaType()).getGeneric(0).resolve();
     }
 
     @Override
@@ -50,7 +49,7 @@ public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicPa
 
     @Override
     public Class returnedClass() {
-        return EnumSet.class;
+        return OptionSet.class;
     }
 
     @Override
@@ -68,7 +67,7 @@ public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicPa
         if (resultSet.getObject(names[0]) != null) {
             long value = resultSet.getLong(names[0]);
 
-            return BitEnumUtils.getEnumSet(enumType, value);
+            return OptionUtils.getItems(optionType, value);
         } else {
             return null;
         }
@@ -79,10 +78,10 @@ public class BitEnumSetType<E extends Enum<E> & BitEnum<E>> implements DynamicPa
         if (value == null) {
             preparedStatement.setNull(index, Types.BIGINT);
         } else {
-            EnumSet data = (EnumSet) value;
+            OptionSet data = (OptionSet) value;
 
             //noinspection unchecked
-            preparedStatement.setLong(index, BitEnumUtils.getValue(enumType, data));
+            preparedStatement.setLong(index, OptionUtils.getValue(optionType, data));
         }
     }
 

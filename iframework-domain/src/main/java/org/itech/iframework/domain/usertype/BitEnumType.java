@@ -4,7 +4,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
-import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.data.BitEnum;
 import org.springframework.util.Assert;
 
@@ -54,6 +53,7 @@ public class BitEnumType implements DynamicParameterizedType, UserType {
 
     @Override
     public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
+        Object result = null;
         if (resultSet.getObject(names[0]) != null) {
             Long value;
 
@@ -62,15 +62,14 @@ public class BitEnumType implements DynamicParameterizedType, UserType {
             for (Object obj : returnedClass().getEnumConstants()) {
                 if (obj instanceof BitEnum) {
                     if (((BitEnum) obj).getValue().equals(value)) {
-                        return obj;
+                        result = obj;
+                        break;
                     }
                 }
             }
-
-            throw new DomainException("未知的值：" + returnedClass().getSimpleName());
-        } else {
-            return null;
         }
+
+        return result;
     }
 
     @Override
