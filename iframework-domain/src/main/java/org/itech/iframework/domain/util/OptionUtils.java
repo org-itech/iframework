@@ -24,7 +24,7 @@ public class OptionUtils {
      *
      * @param clazz   clazz
      * @param options options
-     * @param <O> O
+     * @param <O>     O
      * @return value
      */
     public static <O extends OptionItem> long getValue(Class<O> clazz, OptionSet<O> options) {
@@ -33,7 +33,7 @@ public class OptionUtils {
         long result = 0;
 
         Option option = getOption(clazz);
-        Assert.isTrue(option.isBitwise(), MessageFormat.format("选项 {0} 不支持位运算！", option.getName()));
+        Assert.isTrue(option.isBitwise(), MessageFormat.format(OPTION_IS_NOT_BITWISE, option.getName()));
 
         for (O item : options) {
             if (result == 0) {
@@ -46,7 +46,18 @@ public class OptionUtils {
         return result;
     }
 
+    /**
+     * get set
+     *
+     * @param clazz clazz
+     * @param value value
+     * @param <O>   O
+     * @return set
+     */
     public static <O extends OptionItem> OptionSet<O> getSet(Class<O> clazz, long value) {
+        Option option = getOption(clazz);
+        Assert.isTrue(option.isBitwise(), MessageFormat.format(OPTION_IS_NOT_BITWISE, option.getName()));
+
         OptionSet<O> result = new OptionSet();
 
         for (long i = 1; i <= value; i = DOUBLE * i) {
@@ -61,15 +72,29 @@ public class OptionUtils {
         return result;
     }
 
+    /**
+     * is bitwise
+     *
+     * @param clazz clazz
+     * @param <O>   O
+     * @return is bitwise
+     */
     public static <O extends OptionItem> boolean isBitwise(Class<O> clazz) {
         return getOption(clazz).isBitwise();
     }
 
-    public static <O extends Option, I extends OptionItem<O>> O getOption(Class<I> clazz) {
-        return instance(clazz).getOption();
-    }
-
+    /**
+     * instance
+     *
+     * @param clazz clazz
+     * @param <O>   O
+     * @return instance
+     */
     public static <O extends OptionItem> O instance(Class<O> clazz) {
         return BeanUtils.instantiateClass(clazz);
+    }
+
+    private static <O extends Option, I extends OptionItem<O>> O getOption(Class<I> clazz) {
+        return instance(clazz).getOption();
     }
 }
