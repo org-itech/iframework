@@ -1,7 +1,10 @@
 package org.itech.iframework.domain.data;
 
-import java.util.Collection;
+import org.springframework.core.ResolvableType;
+import org.springframework.core.ResolvableTypeProvider;
+
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * OptionSet
@@ -9,19 +12,17 @@ import java.util.HashSet;
  * @param <O>
  * @author liuqiang
  */
-public class OptionSet<O extends OptionItem> extends HashSet<O> {
+public class OptionSet<O extends OptionItem> extends HashSet<O> implements ResolvableTypeProvider {
     public OptionSet() {
     }
 
-    public OptionSet(Collection<? extends O> collection) {
-        super(collection);
+    @Override
+    public ResolvableType getResolvableType() {
+        return ResolvableType.forClass(this.getClass());
     }
 
-    public OptionSet(int initialCapacity, float loadFactor) {
-        super(initialCapacity, loadFactor);
-    }
-
-    public OptionSet(int initialCapacity) {
-        super(initialCapacity);
+    @SuppressWarnings("unchecked")
+    public Class<O> getOptionClass() {
+        return (Class<O>) Objects.requireNonNull(getResolvableType()).getGeneric(0).resolve();
     }
 }

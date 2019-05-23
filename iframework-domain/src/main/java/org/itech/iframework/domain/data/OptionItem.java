@@ -5,13 +5,20 @@ package org.itech.iframework.domain.data;
  *
  * @author liuqiang
  */
-public interface OptionItem {
+public interface OptionItem<O extends Option> {
     /**
      * get item name
      *
      * @return item name
      */
     String getName();
+
+    /**
+     * set name
+     *
+     * @param name name
+     */
+    void setName(String name);
 
     /**
      * get item value
@@ -32,7 +39,7 @@ public interface OptionItem {
      *
      * @return option
      */
-    Option getOption();
+    O getOption();
 
     /**
      * get option code

@@ -6,8 +6,8 @@ import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
 import org.itech.iframework.domain.DomainException;
 import org.itech.iframework.domain.data.OptionItem;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -23,15 +23,16 @@ import java.util.Properties;
  * @author liuqiang
  */
 public class OptionType implements DynamicParameterizedType, UserType {
-    private Class<?> returnClass;
+    private Class<? extends OptionItem> returnClass;
 
     @Override
     public void setParameterValues(Properties properties) {
         ParameterType params = (ParameterType) properties.get(PARAMETER_TYPE);
 
-        returnClass = params.getReturnedClass();
+        Assert.isAssignable(OptionItem.class, params.getReturnedClass());
 
-        Assert.isAssignable(OptionItem.class, returnClass);
+        //noinspection unchecked
+        returnClass = params.getReturnedClass();
     }
 
     @Override
@@ -57,13 +58,14 @@ public class OptionType implements DynamicParameterizedType, UserType {
     @Override
     public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o)
             throws HibernateException, SQLException {
-        Object result = null;
+        OptionItem result = null;
 
         if (resultSet.getObject(names[0]) != null) {
             Long value = resultSet.getLong(names[0]);
 
             try {
-                result = ReflectionUtils.accessibleConstructor(returnClass).newInstance(value);
+                result = BeanUtils.instantiateClass(returnClass);
+                result.setValue(value);
             } catch (Exception ex) {
                 throw new DomainException(ex);
             }

@@ -67,7 +67,7 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
         if (resultSet.getObject(names[0]) != null) {
             long value = resultSet.getLong(names[0]);
 
-            return OptionUtils.getItems(optionType, value);
+            return OptionUtils.getSet(optionType, value);
         } else {
             return null;
         }

@@ -1,13 +1,11 @@
 package org.itech.iframework.domain.data;
 
-import java.util.List;
-
 /**
  * Option
  *
  * @author liuqiang
  */
-public interface Option<Item extends OptionItem> {
+public interface Option {
     /**
      * get name
      *
@@ -21,13 +19,6 @@ public interface Option<Item extends OptionItem> {
      * @return code
      */
     String getCode();
-
-    /**
-     * get items
-     *
-     * @return items
-     */
-    List<Item> getItems();
 
     /**
      * 是否支持位运算
