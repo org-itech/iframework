@@ -23,7 +23,7 @@ public abstract class AbstractAuditableTreeAggregateRoot<Path extends AbstractTr
         , Node extends AbstractAuditableTreeAggregateRoot<Path, Node, U>
         , U extends User>
         extends AbstractTreeAggregateRoot<Path, Node>
-        implements Auditable<String, U, String, Date> {
+        implements Auditable<U, String, Date> {
     /**
      * 创建人标识
      */

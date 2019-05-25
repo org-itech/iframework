@@ -17,7 +17,7 @@ import java.util.Optional;
  * @author liuqiang
  */
 @MappedSuperclass
-public abstract class AbstractAuditableAggregateRoot<U extends User> extends AbstractAggregateRoot implements Auditable<String, U, String, Date> {
+public abstract class AbstractAuditableAggregateRoot<U extends User> extends AbstractAggregateRoot implements Auditable<U, String, Date> {
     /**
      * 创建人标识
      */

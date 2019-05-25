@@ -17,7 +17,7 @@ import java.util.Optional;
  * @author liuqiang
  */
 @MappedSuperclass
-public abstract class AbstractAuditableEntity<U extends User> extends AbstractEntity implements Auditable<String, U, String, Date> {
+public abstract class AbstractAuditableEntity<U extends User> extends AbstractEntity implements Auditable<U, String, Date> {
     /**
      * 创建人标识
      */

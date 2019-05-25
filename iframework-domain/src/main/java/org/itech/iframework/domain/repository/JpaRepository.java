@@ -5,6 +5,7 @@ import org.itech.iframework.domain.query.Selection;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -22,7 +23,7 @@ import java.util.Optional;
  * @author liuqiang
  */
 @NoRepositoryBean
-public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>, JpaSpecificationExecutor<T> {
+public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndSortingRepository<T, ID>, JpaSpecificationExecutor<T> {
     /**
      * Flushes all pending changes to the datasource.
      */
@@ -88,7 +89,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto
      */
-    <D extends DTO<T>> Optional<D> findById(ID id, Class<D> dtoClass);
+    <D extends DTO<T, ID>> Optional<D> findById(ID id, Class<D> dtoClass);
 
     /**
      * 获取全部dto
@@ -97,7 +98,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto集合
      */
-    <D extends DTO<T>> List<D> findAll(Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAll(Class<D> dtoClass);
 
     /**
      * 根据id集合获取全部dto
@@ -107,7 +108,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto集合
      */
-    <D extends DTO<T>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass);
 
     /**
      * 根据排序对象获取全部dto
@@ -117,7 +118,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto集合
      */
-    <D extends DTO<T>> List<D> findAll(Sort sort, Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAll(Sort sort, Class<D> dtoClass);
 
     /**
      * 根据分页对象获取dto分页数据
@@ -126,7 +127,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param dtoClass dto class
      * @return dto分页数据
      */
-    <D extends DTO<T>> Page<D> findAll(Pageable pageable, Class<D> dtoClass);
+    <D extends DTO<T, ID>> Page<D> findAll(Pageable pageable, Class<D> dtoClass);
 
 
     /**
@@ -137,7 +138,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto
      */
-    <D extends DTO<T>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
+    <D extends DTO<T,ID>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
 
     /**
      * 根据规约获取全部dto
@@ -147,7 +148,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto集合
      */
-    <D extends DTO<T>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
+    <D extends DTO<T,ID>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
 
     /**
      * 根据规约查找dto分页数据
@@ -158,7 +159,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto分页数据
      */
-    <D extends DTO<T>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
+    <D extends DTO<T,ID>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
 
     /**
      * 根据规约查找dto数据，返回排序数据
@@ -169,7 +170,7 @@ public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>,
      * @param <D>      D
      * @return dto分页数据
      */
-    <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
+    <D extends DTO<T,ID>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
 
     /**
      * 获取指定数据

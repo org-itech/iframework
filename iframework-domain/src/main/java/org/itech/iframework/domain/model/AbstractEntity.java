@@ -3,10 +3,7 @@ package org.itech.iframework.domain.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.itech.iframework.domain.usertype.BitEnumSetType;
-import org.itech.iframework.domain.usertype.BitEnumType;
-import org.itech.iframework.domain.usertype.BitOptionSetType;
-import org.itech.iframework.domain.usertype.OptionType;
+import org.itech.iframework.domain.usertype.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -22,7 +19,8 @@ import javax.persistence.*;
         @TypeDef(name = "BitEnum", typeClass = BitEnumType.class),
         @TypeDef(name = "BitEnumSet", typeClass = BitEnumSetType.class),
         @TypeDef(name = "Option", typeClass = OptionType.class),
-        @TypeDef(name = "OptionSet", typeClass = BitOptionSetType.class)
+        @TypeDef(name = "OptionSet", typeClass = OptionSetType.class),
+        @TypeDef(name = "BitOptionSet", typeClass = BitOptionSetType.class)
 })
 public abstract class AbstractEntity implements Persistable<String>, Optimistic<String, Integer> {
     /**

@@ -11,20 +11,20 @@ import java.util.Optional;
  * @param <T>
  * @author liuqiang
  */
-public interface Auditable<UID, U, ID, T> extends Persistable<ID> {
+public interface Auditable<U, ID, T> extends Persistable<ID> {
     /**
      * 获取 创建人标识
      *
      * @return 创建人标识
      */
-    Optional<UID> getCreatedById();
+    Optional<String> getCreatedById();
 
     /**
      * 设置 创建人标识
      *
      * @param createdById 创建人标识
      */
-    void setCreatedById(UID createdById);
+    void setCreatedById(String createdById);
 
     /**
      * 获取创建人
@@ -52,14 +52,14 @@ public interface Auditable<UID, U, ID, T> extends Persistable<ID> {
      *
      * @return 修改人标识
      */
-    Optional<UID> getLastModifiedById();
+    Optional<String> getLastModifiedById();
 
     /**
      * 设置修改人标识
      *
      * @param lastModifiedById 修改人标识
      */
-    void setLastModifiedById(UID lastModifiedById);
+    void setLastModifiedById(String lastModifiedById);
 
     /**
      * 获取修改人
