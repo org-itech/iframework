@@ -44,7 +44,7 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
 
     @Override
     public int[] sqlTypes() {
-        return new int[]{Types.BIGINT};
+        return new int[]{Types.VARCHAR};
     }
 
     @Override
@@ -64,13 +64,15 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
 
     @Override
     public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
-        if (resultSet.getObject(names[0]) != null) {
-            long value = resultSet.getLong(names[0]);
+        Object result = null;
 
-            return OptionUtils.getSet(optionType, value);
-        } else {
-            return null;
+        if (resultSet.getObject(names[0]) != null) {
+            String value = resultSet.getString(names[0]);
+
+            result = OptionUtils.split(optionType, value);
         }
+
+        return result;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
             OptionSet data = (OptionSet) value;
 
             //noinspection unchecked
-            preparedStatement.setLong(index, OptionUtils.getValue(optionType, data));
+            preparedStatement.setString(index, OptionUtils.join(optionType, data));
         }
     }
 
@@ -109,5 +111,9 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
     @Override
     public Object replace(Object original, Object target, Object owner) throws HibernateException {
         return original;
+    }
+
+    public Class<O> getOptionType() {
+        return this.optionType;
     }
 }
