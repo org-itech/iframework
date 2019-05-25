@@ -19,7 +19,7 @@ public @interface FieldMeta {
      *
      * @return 名称
      */
-    String name() default "";
+    String name();
 
     /**
      * 数据类型

@@ -84,7 +84,7 @@ public enum DataType implements BitEnum<DataType> {
     /**
      * 对象
      */
-    Object("对象", EnumSet.noneOf(Operator.class), Object.class);
+    OBJECT("对象", EnumSet.noneOf(Operator.class), Object.class);
 
     private final String name;
 
