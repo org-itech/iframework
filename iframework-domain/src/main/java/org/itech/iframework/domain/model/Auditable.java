@@ -5,7 +5,6 @@ import java.util.Optional;
 /**
  * Auditable
  *
- * @param <UID>
  * @param <U>
  * @param <ID>
  * @param <T>

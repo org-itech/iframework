@@ -5,7 +5,6 @@ package org.itech.iframework.domain.projection;
  *
  * @author liuqiang
  */
-@SuppressWarnings("ALL")
 public interface DTO<T, ID> {
     /**
      * 获取标识
@@ -20,6 +19,6 @@ public interface DTO<T, ID> {
      * @return 是否是新的
      */
     default boolean isNew() {
-        return null == getId() || "" == getId();
+        return null == getId();
     }
 }

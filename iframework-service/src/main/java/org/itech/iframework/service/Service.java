@@ -2,7 +2,6 @@ package org.itech.iframework.service;
 
 import org.itech.iframework.domain.model.Persistable;
 import org.itech.iframework.domain.projection.DTO;
-import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.itech.iframework.domain.query.filter.Filter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,20 +80,20 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      *
      * @param id    标识
      * @param clazz DTO
-     * @param <D>   DTO
+     * @param <DO>  DTO
      * @return DTO
      */
-    <D extends DTO<T, ID>> DTO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<D> clazz);
+    <DO extends DTO<T, ID>> DO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 根据筛选器获取DTO
      *
      * @param specification 规约
      * @param clazz         DTO
-     * @param <D>           DTO
+     * @param <DO>          DTO
      * @return DTO
      */
-    <D extends DTO<T, ID>> Optional<D> findOne(Specification<T> specification, @NotNull(message = CLAZZ_NOT_NULL) Class<D> clazz);
+    <DO extends DTO<T, ID>> Optional<DO> findOne(Specification<T> specification, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 获取分页列表dto
@@ -102,10 +101,10 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param specification 筛选器对象
      * @param pageable      分页对象
      * @param clazz         DTO类型
-     * @param <D>           类型
+     * @param <DO>          类型
      * @return 分页DTO
      */
-    <D extends DTO<T, ID>> Page<D> findAll(Specification<T> specification, @NotNull(message = PAGEABLE_NOT_NULL) Pageable pageable, @NotNull(message = CLAZZ_NOT_NULL) Class<D> clazz);
+    <DO extends DTO<T, ID>> Page<DO> findAll(Specification<T> specification, @NotNull(message = PAGEABLE_NOT_NULL) Pageable pageable, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 获取列表DTO
@@ -113,10 +112,10 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param specification 规约
      * @param sort          排序器对象
      * @param clazz         clazz
-     * @param <D>           类型
+     * @param <DO>          类型
      * @return 分页DTO
      */
-    <D extends DTO<T, ID>> List<D> findAll(Specification<T> specification, Sort sort,@NotNull(message = CLAZZ_NOT_NULL) Class<D> clazz);
+    <DO extends DTO<T, ID>> List<DO> findAll(Specification<T> specification, Sort sort, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 获取列表DTO
@@ -126,16 +125,5 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param extra    扩展参数
      * @return 分页DTO
      */
-    <D extends DTO<T, ID>> Page<D> list(Filter filter, Pageable pageable, Map<String, Object> extra);
-
-    /**
-     * 获取指标
-     *
-     * @param filter    筛选对象
-     * @param pageable  分页对象
-     * @param aggregate 聚合对象
-     * @param extra     扩展参数
-     * @return 分页DTO
-     */
-    Page<?> statistic(Filter filter, Pageable pageable, Aggregator aggregate, Map<String, Object> extra);
+    <DO extends DTO<T, ID>> Page<DO> list(Filter filter, Pageable pageable, Map<String, Object> extra);
 }
