@@ -69,37 +69,37 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public List<Map<String, Object>> aggregate(Aggregator aggregator) {
+    public List<Tuple> aggregate(Aggregator aggregator) {
         return this.aggregate(Sort.unsorted(), aggregator);
     }
 
     @Override
-    public List<Map<String, Object>> aggregate(Sort sort, Aggregator aggregator) {
+    public List<Tuple> aggregate(Sort sort, Aggregator aggregator) {
         Assert.notNull(aggregator, AGGREGATOR_NOT_NULL);
 
         TypedQuery<Tuple> query = this.getQuery(null, getDomainClass(), sort == null ? Sort.unsorted() : sort, aggregator);
 
-        return convertTupleToMap(query.getResultList(), aggregator.getSelections());
+        return query.getResultList();
     }
 
     @Override
-    public Page<Map<String, Object>> aggregate(Pageable pageable, Aggregator aggregator) {
+    public Page<Tuple> aggregate(Pageable pageable, Aggregator aggregator) {
         return this.aggregate(null, pageable, aggregator);
     }
 
     @Override
-    public Page<Map<String, Object>> aggregate(Specification<T> spec, Pageable pageable, Aggregator aggregator) {
+    public Page<Tuple> aggregate(Specification<T> spec, Pageable pageable, Aggregator aggregator) {
         Assert.notNull(aggregator, AGGREGATOR_NOT_NULL);
         Assert.notNull(pageable, PAGEABLE_NOT_NULL);
 
         TypedQuery<Tuple> query = applyPageable(this.getQuery(spec, getDomainClass(), pageable.getSort(), aggregator), pageable);
 
-        return PageableExecutionUtils.getPage(convertTupleToMap(query.getResultList(), aggregator.getSelections()), pageable,
+        return PageableExecutionUtils.getPage(query.getResultList(), pageable,
                 () -> executeCountQuery(getCountQuery(spec, getDomainClass())));
     }
 
     @Override
-    public <D extends DTO<T, ID>> Optional<D> findById(ID id, Class<D> dtoClass) {
+    public <D extends DTO<T>> Optional<D> findById(ID id, Class<D> dtoClass) {
         Assert.notNull(id, ID_NOT_NULL);
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
@@ -113,12 +113,12 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T, ID>> List<D> findAll(Class<D> dtoClass) {
+    public <D extends DTO<T>> List<D> findAll(Class<D> dtoClass) {
         return this.findAll(Sort.unsorted(), dtoClass);
     }
 
     @Override
-    public <D extends DTO<T, ID>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass) {
+    public <D extends DTO<T>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass) {
         Assert.notNull(ids, IDS_NOT_NULL);
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
@@ -142,17 +142,17 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T, ID>> List<D> findAll(Sort sort, Class<D> dtoClass) {
+    public <D extends DTO<T>> List<D> findAll(Sort sort, Class<D> dtoClass) {
         return this.findAll(null, sort, dtoClass);
     }
 
     @Override
-    public <D extends DTO<T, ID>> Page<D> findAll(Pageable pageable, Class<D> dtoClass) {
+    public <D extends DTO<T>> Page<D> findAll(Pageable pageable, Class<D> dtoClass) {
         return this.findAll(null, pageable, dtoClass);
     }
 
     @Override
-    public <D extends DTO<T, ID>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass) {
+    public <D extends DTO<T>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass) {
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
         TypedQuery<D> query = applyPageable(getQuery(null, getDomainClass(), Sort.unsorted(), dtoClass), PageRequest.of(0, 1));
@@ -165,12 +165,12 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T, ID>> List<D> findAll(Specification<T> spec, Class<D> dtoClass) {
+    public <D extends DTO<T>> List<D> findAll(Specification<T> spec, Class<D> dtoClass) {
         return this.findAll(spec, Sort.unsorted(), dtoClass);
     }
 
     @Override
-    public <D extends DTO<T, ID>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass) {
+    public <D extends DTO<T>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass) {
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
         Assert.notNull(pageable, PAGEABLE_NOT_NULL);
 
@@ -181,7 +181,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T, ID>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass) {
+    public <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass) {
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
         TypedQuery<D> query = getQuery(spec, getDomainClass(), sort, dtoClass);
@@ -190,25 +190,25 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public Optional<Map<String, Object>> findById(ID id, Iterable<Selection> selections) {
+    public Optional<Tuple> findById(ID id, Iterable<Selection> selections) {
         Assert.notNull(id, ID_NOT_NULL);
 
         TypedQuery<Tuple> query = getQuery(new IdSpecification(id), getDomainClass(), Sort.unsorted(), selections);
 
         try {
-            return Optional.of(convertTupleToMap(query.getSingleResult(), selections));
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Iterable<Selection> selections) {
+    public List<Tuple> findAll(Iterable<Selection> selections) {
         return this.findAll(null, Sort.unsorted(), selections);
     }
 
     @Override
-    public List<Map<String, Object>> findAllById(Iterable<ID> ids, Iterable<Selection> selections) {
+    public List<Tuple> findAllById(Iterable<ID> ids, Iterable<Selection> selections) {
         Assert.notNull(ids, IDS_NOT_NULL);
         Assert.notNull(selections, SELECTIONS_NOT_NULL);
 
@@ -217,7 +217,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
         }
 
         if (entityInformation.hasCompositeId()) {
-            List<Map<String, Object>> results = new ArrayList<>();
+            List<Tuple> results = new ArrayList<>();
 
             for (ID id : ids) {
                 findById(id, selections).ifPresent(results::add);
@@ -227,59 +227,59 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
         } else {
             TypedQuery<Tuple> query = getQuery(new IdsSpecification(ids), getDomainClass(), Sort.unsorted(), selections);
 
-            return convertTupleToMap(query.getResultList(), selections);
+            return query.getResultList();
         }
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Sort sort, Iterable<Selection> selections) {
+    public List<Tuple> findAll(Sort sort, Iterable<Selection> selections) {
         return this.findAll(null, sort, selections);
     }
 
     @Override
-    public Page<Map<String, Object>> findAll(Pageable pageable, Iterable<Selection> selections) {
+    public Page<Tuple> findAll(Pageable pageable, Iterable<Selection> selections) {
         return this.findAll(null, pageable, selections);
     }
 
     @Override
-    public Optional<Map<String, Object>> findOne(Specification<T> spec, Iterable<Selection> selections) {
+    public Optional<Tuple> findOne(Specification<T> spec, Iterable<Selection> selections) {
         Assert.notNull(selections, SELECTIONS_NOT_NULL);
 
         TypedQuery<Tuple> query = applyPageable(getQuery(null, getDomainClass(), Sort.unsorted(), selections), PageRequest.of(0, 1));
 
         try {
-            return Optional.of(convertTupleToMap(query.getSingleResult(), selections));
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Specification<T> spec, Iterable<Selection> selections) {
+    public List<Tuple> findAll(Specification<T> spec, Iterable<Selection> selections) {
         return this.findAll(spec, Sort.unsorted(), selections);
     }
 
     @Override
-    public Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Iterable<Selection> selections) {
+    public Page<Tuple> findAll(Specification<T> spec, Pageable pageable, Iterable<Selection> selections) {
         Assert.notNull(pageable, PAGEABLE_NOT_NULL);
         Assert.notNull(selections, SELECTIONS_NOT_NULL);
 
         TypedQuery<Tuple> query = applyPageable(getQuery(spec, getDomainClass(), pageable.getSort(), selections), pageable);
 
-        return PageableExecutionUtils.getPage(convertTupleToMap(query.getResultList(), selections), pageable,
+        return PageableExecutionUtils.getPage(query.getResultList(), pageable,
                 () -> executeCountQuery(getCountQuery(spec, getDomainClass())));
     }
 
     @Override
-    public List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Iterable<Selection> selections) {
+    public List<Tuple> findAll(Specification<T> spec, Sort sort, Iterable<Selection> selections) {
         Assert.notNull(selections, SELECTIONS_NOT_NULL);
 
         TypedQuery<Tuple> query = getQuery(spec, getDomainClass(), sort, selections);
 
-        return convertTupleToMap(query.getResultList(), selections);
+        return query.getResultList();
     }
 
-    protected <D extends DTO<T, ID>, S extends T> TypedQuery<D> getQuery(Specification<S> spec, Class<S> domainClass, Sort sort, Class<D> dtoClass) {
+    protected <D extends DTO<T>, S extends T> TypedQuery<D> getQuery(Specification<S> spec, Class<S> domainClass, Sort sort, Class<D> dtoClass) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<D> query = builder.createQuery(dtoClass);
 
@@ -332,7 +332,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    private <D extends DTO<T, ID>, S extends T> javax.persistence.criteria.Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
+    private <D extends DTO<T>, S extends T> javax.persistence.criteria.Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
         javax.persistence.criteria.Selection<?>[] result = selectionsCache.get(dtoClass);
 
         if (result == null) {
@@ -392,11 +392,6 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
 
         LockModeType type = getRepositoryMethodMetadata().getLockModeType();
         return type == null ? query : query.setLockMode(type);
-
-        // todo
-        // applyQueryHints(toReturn);
-
-        // return toReturn;
     }
 
     private List<Map<String, Object>> convertTupleToMap(List<Tuple> tuples, Iterable<Selection> selections) {

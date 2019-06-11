@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,211 +47,210 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
     boolean exists(Specification<T> spec);
 
     /**
-     * 计算聚合
+     * aggregate
      *
      * @param aggregator aggregator
-     * @return 聚合结果
+     * @return data
      */
-    List<Map<String, Object>> aggregate(Aggregator aggregator);
+    List<Tuple> aggregate(Aggregator aggregator);
 
     /**
-     * 计算聚合
+     * aggregate
      *
      * @param sort       sort
      * @param aggregator aggregator
-     * @return 聚合结果
+     * @return data
      */
-    List<Map<String, Object>> aggregate(Sort sort, Aggregator aggregator);
+    List<Tuple> aggregate(Sort sort, Aggregator aggregator);
 
     /**
-     * 计算聚合
+     * aggregate
      *
      * @param pageable   pageable
      * @param aggregator aggregator
-     * @return 聚合结果
+     * @return data
      */
-    Page<Map<String, Object>> aggregate(Pageable pageable, Aggregator aggregator);
+    Page<Tuple> aggregate(Pageable pageable, Aggregator aggregator);
 
     /**
-     * 计算聚合
+     * aggregate
      *
      * @param spec       spec
      * @param pageable   pageable
      * @param aggregator aggregator
-     * @return 聚合结果
+     * @return data
      */
-    Page<Map<String, Object>> aggregate(Specification<T> spec, Pageable pageable, Aggregator aggregator);
+    Page<Tuple> aggregate(Specification<T> spec, Pageable pageable, Aggregator aggregator);
 
     /**
-     * 根据id获取DTO
+     * findById
      *
      * @param id       id
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto
+     * @return data
      */
-    <D extends DTO<T, ID>> Optional<D> findById(ID id, Class<D> dtoClass);
+    <D extends DTO<T>> Optional<D> findById(ID id, Class<D> dtoClass);
 
     /**
-     * 获取全部dto
+     * findAll
      *
      * @param dtoClass dto
      * @param <D>      D
-     * @return dto集合
+     * @return data
      */
-    <D extends DTO<T, ID>> List<D> findAll(Class<D> dtoClass);
+    <D extends DTO<T>> List<D> findAll(Class<D> dtoClass);
 
     /**
-     * 根据id集合获取全部dto
+     * findAllById
      *
      * @param ids      ids
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto集合
+     * @return data
      */
-    <D extends DTO<T, ID>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass);
+    <D extends DTO<T>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass);
 
     /**
-     * 根据排序对象获取全部dto
+     * findAll
      *
      * @param sort     sort
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto集合
+     * @return data
      */
-    <D extends DTO<T, ID>> List<D> findAll(Sort sort, Class<D> dtoClass);
+    <D extends DTO<T>> List<D> findAll(Sort sort, Class<D> dtoClass);
 
     /**
-     * 根据分页对象获取dto分页数据
+     * findAll
      *
      * @param pageable pageable
      * @param dtoClass dto class
-     * @return dto分页数据
+     * @return data
      */
-    <D extends DTO<T, ID>> Page<D> findAll(Pageable pageable, Class<D> dtoClass);
-
+    <D extends DTO<T>> Page<D> findAll(Pageable pageable, Class<D> dtoClass);
 
     /**
-     * 根据规约获取dto
+     * findOne
      *
      * @param spec     spec
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto
+     * @return data
      */
-    <D extends DTO<T,ID>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
+    <D extends DTO<T>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
 
     /**
-     * 根据规约获取全部dto
+     * findAll
      *
      * @param spec     spec
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto集合
+     * @return data
      */
-    <D extends DTO<T,ID>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
+    <D extends DTO<T>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
 
     /**
-     * 根据规约查找dto分页数据
+     * findAll
      *
      * @param spec     spec
      * @param pageable pageable
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto分页数据
+     * @return data
      */
-    <D extends DTO<T,ID>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
+    <D extends DTO<T>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
 
     /**
-     * 根据规约查找dto数据，返回排序数据
+     * findAll
      *
      * @param spec     spec
      * @param sort     sort
      * @param dtoClass dto class
      * @param <D>      D
-     * @return dto分页数据
+     * @return data
      */
-    <D extends DTO<T,ID>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
+    <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
 
     /**
-     * 获取指定数据
+     * findById
      *
      * @param id         id
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    Optional<Map<String, Object>> findById(ID id, Iterable<Selection> selections);
+    Optional<Tuple> findById(ID id, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAll
      *
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    List<Map<String, Object>> findAll(Iterable<Selection> selections);
+    List<Tuple> findAll(Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAllById
      *
      * @param ids        ids
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    List<Map<String, Object>> findAllById(Iterable<ID> ids, Iterable<Selection> selections);
+    List<Tuple> findAllById(Iterable<ID> ids, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAll
      *
      * @param sort       sort
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    List<Map<String, Object>> findAll(Sort sort, Iterable<Selection> selections);
+    List<Tuple> findAll(Sort sort, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAll
      *
      * @param pageable   pageable
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    Page<Map<String, Object>> findAll(Pageable pageable, Iterable<Selection> selections);
+    Page<Tuple> findAll(Pageable pageable, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findOne
      *
      * @param spec       spec
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    Optional<Map<String, Object>> findOne(Specification<T> spec, Iterable<Selection> selections);
+    Optional<Tuple> findOne(Specification<T> spec, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAll
      *
      * @param spec       spec
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    List<Map<String, Object>> findAll(Specification<T> spec, Iterable<Selection> selections);
+    List<Tuple> findAll(Specification<T> spec, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAll
      *
      * @param spec       spec
      * @param pageable   pageable
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    Page<Map<String, Object>> findAll(Specification<T> spec, Pageable pageable, Iterable<Selection> selections);
+    Page<Tuple> findAll(Specification<T> spec, Pageable pageable, Iterable<Selection> selections);
 
     /**
-     * 获取指定数据
+     * findAll
      *
      * @param spec       spec
      * @param sort       sort
      * @param selections selections
-     * @return 指定数据
+     * @return data
      */
-    List<Map<String, Object>> findAll(Specification<T> spec, Sort sort, Iterable<Selection> selections);
+    List<Tuple> findAll(Specification<T> spec, Sort sort, Iterable<Selection> selections);
 }

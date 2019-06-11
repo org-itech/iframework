@@ -23,7 +23,7 @@ import java.util.Optional;
  * @param <D>  D
  * @author liuqiang
  */
-public abstract class AbstractService<T extends Persistable<ID>, ID, D extends DTO<T, ID>> implements Service<T, ID, D> {
+public abstract class AbstractService<T extends Persistable<ID>, ID, D extends DTO<T>> implements Service<T, ID, D> {
     public AbstractService() {
 
     }
@@ -59,27 +59,27 @@ public abstract class AbstractService<T extends Persistable<ID>, ID, D extends D
     }
 
     @Override
-    public <DO extends DTO<T, ID>> DO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
+    public <DO extends DTO<T>> DO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
         return null;
     }
 
     @Override
-    public <DO extends DTO<T, ID>> Optional<DO> findOne(Specification<T> specification, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
+    public <DO extends DTO<T>> Optional<DO> findOne(Specification<T> specification, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
         return Optional.empty();
     }
 
     @Override
-    public <DO extends DTO<T, ID>> Page<DO> findAll(Specification<T> specification, @NotNull(message = PAGEABLE_NOT_NULL) Pageable pageable, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
+    public <DO extends DTO<T>> Page<DO> findAll(Specification<T> specification, @NotNull(message = PAGEABLE_NOT_NULL) Pageable pageable, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
         return null;
     }
 
     @Override
-    public <DO extends DTO<T, ID>> List<DO> findAll(Specification<T> specification, Sort sort, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
+    public <DO extends DTO<T>> List<DO> findAll(Specification<T> specification, Sort sort, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz) {
         return null;
     }
 
     @Override
-    public <DO extends DTO<T, ID>> Page<DO> list(Filter filter, Pageable pageable, Map<String, Object> extra) {
+    public <DO extends DTO<T>> Page<DO> list(Filter filter, Pageable pageable, Map<String, Object> extra) {
         return null;
     }
 }

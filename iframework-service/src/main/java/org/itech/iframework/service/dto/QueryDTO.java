@@ -1,6 +1,5 @@
 package org.itech.iframework.service.dto;
 
-import org.itech.iframework.domain.model.Optimistic;
 import org.itech.iframework.domain.projection.DTO;
 
 /**
@@ -9,5 +8,5 @@ import org.itech.iframework.domain.projection.DTO;
  * @param <T> T
  * @author liuqiang
  */
-public interface QueryDTO<ID, Version, T extends Optimistic<ID, Version>> extends DTO<ID, T> {
+public interface QueryDTO<T> extends DTO<T> {
 }

@@ -20,7 +20,7 @@ import java.util.Optional;
  *
  * @author liuqiang
  */
-public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
+public interface Service<T extends Persistable<ID>, ID, D extends DTO<T>> {
     String DTO_NOT_NULL = "参数 dto 不能为空！";
     String ID_NOT_NULL = "参数 id 不能为空！";
     String SPEC_NOT_NULL = "参数 specification 不能为空！";
@@ -83,7 +83,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param <DO>  DTO
      * @return DTO
      */
-    <DO extends DTO<T, ID>> DO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
+    <DO extends DTO<T>> DO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 根据筛选器获取DTO
@@ -93,7 +93,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param <DO>          DTO
      * @return DTO
      */
-    <DO extends DTO<T, ID>> Optional<DO> findOne(Specification<T> specification, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
+    <DO extends DTO<T>> Optional<DO> findOne(Specification<T> specification, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 获取分页列表dto
@@ -104,7 +104,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param <DO>          类型
      * @return 分页DTO
      */
-    <DO extends DTO<T, ID>> Page<DO> findAll(Specification<T> specification, @NotNull(message = PAGEABLE_NOT_NULL) Pageable pageable, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
+    <DO extends DTO<T>> Page<DO> findAll(Specification<T> specification, @NotNull(message = PAGEABLE_NOT_NULL) Pageable pageable, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 获取列表DTO
@@ -115,7 +115,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param <DO>          类型
      * @return 分页DTO
      */
-    <DO extends DTO<T, ID>> List<DO> findAll(Specification<T> specification, Sort sort, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
+    <DO extends DTO<T>> List<DO> findAll(Specification<T> specification, Sort sort, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 获取列表DTO
@@ -125,5 +125,5 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T, ID>> {
      * @param extra    扩展参数
      * @return 分页DTO
      */
-    <DO extends DTO<T, ID>> Page<DO> list(Filter filter, Pageable pageable, Map<String, Object> extra);
+    <DO extends DTO<T>> Page<DO> list(Filter filter, Pageable pageable, Map<String, Object> extra);
 }
