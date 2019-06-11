@@ -49,7 +49,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T>> {
      * @param id      标识
      * @param version 版本号
      */
-    void delete(@NotBlank(message = ID_NOT_NULL) String id, long version);
+    void delete(@NotBlank(message = ID_NOT_NULL) ID id, long version);
 
     /**
      * 根据标识获取DTO
@@ -57,7 +57,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T>> {
      * @param id 标识
      * @return DTO
      */
-    D findById(@NotBlank(message = ID_NOT_NULL) String id);
+    D findById(@NotBlank(message = ID_NOT_NULL) ID id);
 
     /**
      * 是否存在满足规约的实体
@@ -73,7 +73,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T>> {
      * @param id 标识
      * @return 是否存在
      */
-    boolean existsById(@NotBlank(message = ID_NOT_NULL) String id);
+    boolean existsById(@NotBlank(message = ID_NOT_NULL) ID id);
 
     /**
      * 根据标识获取DTO
@@ -83,7 +83,7 @@ public interface Service<T extends Persistable<ID>, ID, D extends DTO<T>> {
      * @param <DO>  DTO
      * @return DTO
      */
-    <DO extends DTO<T>> DO findById(@NotBlank(message = ID_NOT_NULL) String id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
+    <DO extends DTO<T>> DO findById(@NotBlank(message = ID_NOT_NULL) ID id, @NotNull(message = CLAZZ_NOT_NULL) Class<DO> clazz);
 
     /**
      * 根据筛选器获取DTO

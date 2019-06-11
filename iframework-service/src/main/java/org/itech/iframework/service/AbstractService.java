@@ -1,8 +1,10 @@
 package org.itech.iframework.service;
 
+import org.itech.iframework.domain.model.AbstractEntity;
 import org.itech.iframework.domain.model.Persistable;
 import org.itech.iframework.domain.projection.DTO;
 import org.itech.iframework.domain.query.filter.Filter;
+import org.itech.iframework.service.dto.CommandDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +25,7 @@ import java.util.Optional;
  * @param <D>  D
  * @author liuqiang
  */
-public abstract class AbstractService<T extends Persistable<ID>, ID, D extends DTO<T>> implements Service<T, ID, D> {
+public abstract class AbstractService<T extends AbstractEntity, ID, D extends CommandDTO<T>> implements Service<T, String, D> {
     public AbstractService() {
 
     }
