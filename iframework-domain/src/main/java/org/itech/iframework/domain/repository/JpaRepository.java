@@ -1,11 +1,11 @@
 package org.itech.iframework.domain.repository;
 
-import org.itech.iframework.domain.projection.DTO;
+import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.model.Persistable;
 import org.itech.iframework.domain.query.Selection;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,7 +14,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import javax.persistence.Tuple;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -90,7 +89,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> Optional<D> findById(ID id, Class<D> dtoClass);
+    <D extends DTO<T, ID>> Optional<D> findById(ID id, Class<D> dtoClass);
 
     /**
      * findAll
@@ -99,7 +98,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> List<D> findAll(Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAll(Class<D> dtoClass);
 
     /**
      * findAllById
@@ -109,7 +108,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass);
 
     /**
      * findAll
@@ -119,7 +118,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> List<D> findAll(Sort sort, Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAll(Sort sort, Class<D> dtoClass);
 
     /**
      * findAll
@@ -128,7 +127,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param dtoClass dto class
      * @return data
      */
-    <D extends DTO<T>> Page<D> findAll(Pageable pageable, Class<D> dtoClass);
+    <D extends DTO<T, ID>> Page<D> findAll(Pageable pageable, Class<D> dtoClass);
 
     /**
      * findOne
@@ -138,7 +137,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
+    <D extends DTO<T, ID>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass);
 
     /**
      * findAll
@@ -148,7 +147,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAll(Specification<T> spec, Class<D> dtoClass);
 
     /**
      * findAll
@@ -159,7 +158,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
+    <D extends DTO<T, ID>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass);
 
     /**
      * findAll
@@ -170,7 +169,7 @@ public interface JpaRepository<T extends Persistable<ID>, ID> extends PagingAndS
      * @param <D>      D
      * @return data
      */
-    <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
+    <D extends DTO<T, ID>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass);
 
     /**
      * findById

@@ -1,7 +1,7 @@
 package org.itech.iframework.service.dto;
 
-import org.itech.iframework.domain.model.AbstractEntity;
-import org.itech.iframework.domain.projection.DTO;
+import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.model.Optimistic;
 
 /**
  * CommandDTO
@@ -9,14 +9,7 @@ import org.itech.iframework.domain.projection.DTO;
  * @param <T> T
  * @author liuqiang
  */
-public interface CommandDTO<T extends AbstractEntity> extends DTO<T> {
-    /**
-     * get id
-     *
-     * @return id
-     */
-    String getId();
-
+public interface CommandDTO<T extends Optimistic<String, Integer>> extends DTO<T, String> {
     /**
      * set id
      *

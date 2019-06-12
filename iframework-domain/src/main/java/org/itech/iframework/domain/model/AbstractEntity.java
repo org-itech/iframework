@@ -22,7 +22,7 @@ import javax.persistence.*;
         @TypeDef(name = "OptionSet", typeClass = OptionSetType.class),
         @TypeDef(name = "BitOptionSet", typeClass = BitOptionSetType.class)
 })
-public abstract class AbstractEntity implements Persistable<String>, Optimistic<String, Integer> {
+public abstract class AbstractEntity implements Optimistic<String, Integer> {
     /**
      * 标识
      */

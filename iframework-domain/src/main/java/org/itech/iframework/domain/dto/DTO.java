@@ -1,20 +1,24 @@
-package org.itech.iframework.domain.model;
+package org.itech.iframework.domain.dto;
 
 import org.springframework.util.StringUtils;
 
 /**
- * Persistable
+ * DTO
  *
- * @param <ID> 标识类型
  * @author liuqiang
  */
-public interface Persistable<ID> {
+public interface DTO<T, ID> {
     /**
-     * 获取标识
+     * get id
      *
-     * @return 标识
+     * @return id
      */
     ID getId();
+
+    /**
+     * set id
+     */
+    void setId(ID id);
 
     /**
      * 是否是新的

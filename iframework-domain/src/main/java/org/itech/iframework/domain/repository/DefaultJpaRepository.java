@@ -1,11 +1,15 @@
 package org.itech.iframework.domain.repository;
 
-import org.itech.iframework.domain.projection.DTO;
+import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.model.Persistable;
 import org.itech.iframework.domain.projection.Projection;
 import org.itech.iframework.domain.query.Selection;
 import org.itech.iframework.domain.query.aggregate.Aggregator;
 import org.itech.iframework.domain.util.QueryUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -99,7 +103,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T>> Optional<D> findById(ID id, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> Optional<D> findById(ID id, Class<D> dtoClass) {
         Assert.notNull(id, ID_NOT_NULL);
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
@@ -113,12 +117,12 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T>> List<D> findAll(Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> List<D> findAll(Class<D> dtoClass) {
         return this.findAll(Sort.unsorted(), dtoClass);
     }
 
     @Override
-    public <D extends DTO<T>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> List<D> findAllById(Iterable<ID> ids, Class<D> dtoClass) {
         Assert.notNull(ids, IDS_NOT_NULL);
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
@@ -142,17 +146,17 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T>> List<D> findAll(Sort sort, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> List<D> findAll(Sort sort, Class<D> dtoClass) {
         return this.findAll(null, sort, dtoClass);
     }
 
     @Override
-    public <D extends DTO<T>> Page<D> findAll(Pageable pageable, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> Page<D> findAll(Pageable pageable, Class<D> dtoClass) {
         return this.findAll(null, pageable, dtoClass);
     }
 
     @Override
-    public <D extends DTO<T>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> Optional<D> findOne(Specification<T> spec, Class<D> dtoClass) {
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
         TypedQuery<D> query = applyPageable(getQuery(null, getDomainClass(), Sort.unsorted(), dtoClass), PageRequest.of(0, 1));
@@ -165,12 +169,12 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T>> List<D> findAll(Specification<T> spec, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> List<D> findAll(Specification<T> spec, Class<D> dtoClass) {
         return this.findAll(spec, Sort.unsorted(), dtoClass);
     }
 
     @Override
-    public <D extends DTO<T>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> Page<D> findAll(Specification<T> spec, Pageable pageable, Class<D> dtoClass) {
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
         Assert.notNull(pageable, PAGEABLE_NOT_NULL);
 
@@ -181,7 +185,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
     }
 
     @Override
-    public <D extends DTO<T>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass) {
+    public <D extends DTO<T, ID>> List<D> findAll(Specification<T> spec, Sort sort, Class<D> dtoClass) {
         Assert.notNull(dtoClass, DTO_CLASS_NOT_NULL);
 
         TypedQuery<D> query = getQuery(spec, getDomainClass(), sort, dtoClass);
@@ -279,7 +283,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
         return query.getResultList();
     }
 
-    protected <D extends DTO<T>, S extends T> TypedQuery<D> getQuery(Specification<S> spec, Class<S> domainClass, Sort sort, Class<D> dtoClass) {
+    protected <D extends DTO<T, ID>, S extends T> TypedQuery<D> getQuery(Specification<S> spec, Class<S> domainClass, Sort sort, Class<D> dtoClass) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<D> query = builder.createQuery(dtoClass);
 
@@ -332,7 +336,7 @@ public class DefaultJpaRepository<T extends Persistable<ID>, ID> extends SimpleJ
         return applyRepositoryMethodMetadata(em.createQuery(query));
     }
 
-    private <D extends DTO<T>, S extends T> javax.persistence.criteria.Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
+    private <D extends DTO<T, ID>, S extends T> javax.persistence.criteria.Selection<?>[] getSelections(Root<S> root, CriteriaBuilder builder, Class<D> dtoClass) {
         javax.persistence.criteria.Selection<?>[] result = selectionsCache.get(dtoClass);
 
         if (result == null) {

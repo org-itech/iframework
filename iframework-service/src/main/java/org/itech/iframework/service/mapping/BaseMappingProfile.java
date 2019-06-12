@@ -1,10 +1,10 @@
 package org.itech.iframework.service.mapping;
 
 import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
+import com.github.dozermapper.core.loader.api.FieldDefinition;
 import com.github.dozermapper.core.loader.api.FieldsMappingOptions;
-import org.itech.iframework.domain.model.Auditable;
-import org.itech.iframework.domain.model.Optimistic;
-import org.itech.iframework.domain.model.Persistable;
+import org.itech.iframework.domain.data.Stateful;
+import org.itech.iframework.domain.model.*;
 import org.itech.iframework.service.dto.CommandDTO;
 
 /**
@@ -15,6 +15,9 @@ import org.itech.iframework.service.dto.CommandDTO;
 public class BaseMappingProfile extends BeanMappingBuilder {
     @Override
     protected void configure() {
+        mapping(Stateful.class, Stateful.class)
+                .exclude("status");
+
         mapping(Persistable.class, Persistable.class)
                 .exclude("id");
 
@@ -32,20 +35,21 @@ public class BaseMappingProfile extends BeanMappingBuilder {
         mapping(Persistable.class, CommandDTO.class)
                 .fields("id", "id", FieldsMappingOptions.oneWay());
 
+        mapping(AbstractEntity.class, CommandDTO.class)
+                .fields((new FieldDefinition("id")).accessible(true), "id");
+
+        mapping(AbstractAggregateRoot.class, CommandDTO.class)
+                .fields("id", "id", FieldsMappingOptions.oneWay());
+
         mapping(Optimistic.class, CommandDTO.class)
                 .fields("verison", "verison", FieldsMappingOptions.oneWay());
 
         mapping(Auditable.class, CommandDTO.class)
                 .fields("createdOn", "createdOn", FieldsMappingOptions.oneWay())
                 .fields("createdById", "createdById", FieldsMappingOptions.oneWay())
-                .fields("verison", "verison", FieldsMappingOptions.oneWay())
-                .fields("verison", "verison", FieldsMappingOptions.oneWay())
-                .fields("verison", "verison", FieldsMappingOptions.oneWay())
-                .exclude("createdOn")
-                .exclude("createdById")
                 .exclude("createdBy")
-                .exclude("lastModifiedOn")
-                .exclude("lastModifiedById")
+                .fields("lastModifiedOn", "lastModifiedOn", FieldsMappingOptions.oneWay())
+                .fields("lastModifiedById", "lastModifiedById", FieldsMappingOptions.oneWay())
                 .exclude("lastModifiedBy");
     }
 }

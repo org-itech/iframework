@@ -1,6 +1,7 @@
 package org.itech.iframework.service.dto;
 
-import org.itech.iframework.domain.projection.DTO;
+import org.itech.iframework.domain.dto.DTO;
+import org.itech.iframework.domain.model.Persistable;
 
 /**
  * QueryDTO
@@ -8,5 +9,5 @@ import org.itech.iframework.domain.projection.DTO;
  * @param <T> T
  * @author liuqiang
  */
-public interface QueryDTO<T> extends DTO<T> {
+public interface QueryDTO<T extends Persistable<String>> extends DTO<T, String> {
 }
