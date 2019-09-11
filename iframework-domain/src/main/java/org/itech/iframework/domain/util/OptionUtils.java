@@ -52,12 +52,11 @@ public class OptionUtils {
     /**
      * get string value
      *
-     * @param clazz   clazz
      * @param options options
      * @param <O>     O
      * @return value
      */
-    public static <O extends OptionItem> String join(Class<O> clazz, OptionSet<O> options) {
+    public static <O extends OptionItem> String join(OptionSet<O> options) {
         Assert.notNull(options, OPTIONS_NOT_NULL);
 
         return options.stream()
@@ -82,7 +81,7 @@ public class OptionUtils {
                     OptionItem optionItem = instance(clazz);
 
                     try {
-                        Long val = new Long(item);
+                        Long val = Long.valueOf(item);
 
                         optionItem.setValue(val);
                         result.add(optionItem);

@@ -4,9 +4,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.itech.iframework.domain.usertype.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * AbstractEntity
@@ -14,7 +16,6 @@ import javax.persistence.*;
  * @author liuqiang
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @TypeDefs({
         @TypeDef(name = "BitEnum", typeClass = BitEnumType.class),
         @TypeDef(name = "BitEnumSet", typeClass = BitEnumSetType.class),

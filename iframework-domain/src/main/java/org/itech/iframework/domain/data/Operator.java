@@ -195,7 +195,7 @@ public enum Operator implements BitEnum<Operator> {
         public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expression expression, String property, Object value) {
             Expression ex = cb.function(BIT_AND_FUNCTION_NAME, Long.class, expression, cb.literal(value));
 
-            return cb.equal(expression, value);
+            return cb.equal(ex, value);
         }
     },
 
