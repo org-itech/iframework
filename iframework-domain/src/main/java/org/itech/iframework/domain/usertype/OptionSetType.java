@@ -83,7 +83,7 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
             OptionSet data = (OptionSet) value;
 
             //noinspection unchecked
-            preparedStatement.setString(index, OptionUtils.join(optionType, data));
+            preparedStatement.setString(index, OptionUtils.join(data));
         }
     }
 
@@ -111,9 +111,5 @@ public class OptionSetType<O extends OptionItem> implements DynamicParameterized
     @Override
     public Object replace(Object original, Object target, Object owner) throws HibernateException {
         return original;
-    }
-
-    public Class<O> getOptionType() {
-        return this.optionType;
     }
 }
