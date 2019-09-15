@@ -1,5 +1,6 @@
 package org.itech.iframework.domain.meta;
 
+import org.itech.iframework.domain.data.DataSubType;
 import org.itech.iframework.domain.data.DataType;
 
 import java.lang.annotation.*;
@@ -27,6 +28,13 @@ public @interface FieldMeta {
      * @return 数据类型
      */
     DataType type() default DataType.STRING;
+
+    /**
+     * 数据子类型
+     *
+     * @return 数据子类型
+     */
+    DataSubType subType() default DataSubType.SHORT_STRING;
 
     /**
      * 是否只读

@@ -1,10 +1,13 @@
 package org.itech.iframework.domain.data;
 
+import org.itech.iframework.domain.model.AbstractAggregateRoot;
+import org.itech.iframework.domain.model.AbstractEntity;
+
 import java.math.BigDecimal;
 import java.util.EnumSet;
 
 /**
- * DataType
+ * DataSubType
  *
  * @author liuqiang
  */
@@ -20,7 +23,8 @@ public enum DataSubType implements BitEnum<DataSubType> {
             , Operator.EW
             , Operator.IN
             , Operator.NOT_IN)
-            , String.class),
+            , DataType.STRING
+            , DataType.STRING.getJavaType()),
 
     /**
      * 长文本
@@ -33,7 +37,8 @@ public enum DataSubType implements BitEnum<DataSubType> {
             , Operator.EW
             , Operator.IN
             , Operator.NOT_IN)
-            , String.class),
+            , DataType.STRING
+            , DataType.STRING.getJavaType()),
 
     /**
      * 引用
@@ -42,7 +47,8 @@ public enum DataSubType implements BitEnum<DataSubType> {
             , Operator.NEQ
             , Operator.IN
             , Operator.NOT_IN)
-            , String.class),
+            , DataType.STRING
+            , DataType.STRING.getJavaType()),
 
     /**
      * 层级
@@ -55,13 +61,15 @@ public enum DataSubType implements BitEnum<DataSubType> {
             , Operator.ANC
             , Operator.DES_AS
             , Operator.ANC_AS)
-            , String.class),
+            , DataType.STRING
+            , DataType.STRING.getJavaType()),
 
     /**
      * 双态
      */
     DUAL("双态"
             , DataType.BOOLEAN.getSupportedOperators()
+            , DataType.BOOLEAN
             , DataType.BOOLEAN.getJavaType()),
 
     /**
@@ -69,6 +77,7 @@ public enum DataSubType implements BitEnum<DataSubType> {
      */
     TRIPLE("三态", EnumSet.of(Operator.EQ
             , Operator.NEQ)
+            , DataType.BOOLEAN
             , DataType.BOOLEAN.getJavaType()),
 
     /**
@@ -77,6 +86,7 @@ public enum DataSubType implements BitEnum<DataSubType> {
      */
     SHORT("SHORT"
             , DataType.INTEGER.getSupportedOperators()
+            , DataType.INTEGER
             , Short.class),
 
     /**
@@ -85,13 +95,16 @@ public enum DataSubType implements BitEnum<DataSubType> {
      */
     INT("INT"
             , DataType.INTEGER.getSupportedOperators()
+            , DataType.INTEGER
             , Integer.class),
 
     /**
      * BIGINT
      * -263 ~ 263-1
      */
-    BIGINT("BIGINT", DataType.INTEGER.getSupportedOperators()
+    BIGINT("BIGINT"
+            , DataType.INTEGER.getSupportedOperators()
+            , DataType.INTEGER
             , Long.class),
 
     /**
@@ -99,6 +112,7 @@ public enum DataSubType implements BitEnum<DataSubType> {
      */
     FLOAT("FLOAT"
             , DataType.NUMBER.getSupportedOperators()
+            , DataType.NUMBER
             , Float.class),
 
     /**
@@ -106,12 +120,14 @@ public enum DataSubType implements BitEnum<DataSubType> {
      */
     DOUBLE("DOUBLE"
             , DataType.NUMBER.getSupportedOperators()
+            , DataType.NUMBER
             , Double.class),
 
     /**
      * BIG_DECIMAL
      */
     BIG_DECIMAL("BIG_DECIMAL", DataType.NUMBER.getSupportedOperators()
+            , DataType.NUMBER
             , BigDecimal.class),
 
     /**
@@ -119,28 +135,55 @@ public enum DataSubType implements BitEnum<DataSubType> {
      */
     DATE("日期"
             , DataType.DATE.getSupportedOperators()
+            , DataType.DATE
             , DataType.DATE.getJavaType()),
 
     /**
      * 时间
      */
     TIME("时间", DataType.DATE.getSupportedOperators()
+            , DataType.DATE
             , DataType.DATE.getJavaType()),
 
     /**
      * 日期时间
      */
     DATETIME("日期时间", DataType.DATE.getSupportedOperators()
-            , DataType.DATE.getJavaType());
+            , DataType.DATE
+            , DataType.DATE.getJavaType()),
+
+    /**
+     * 聚合根
+     */
+    AGGREGATE_ROOT("聚合根", DataType.OBJECT.getSupportedOperators()
+            , DataType.OBJECT
+            , AbstractAggregateRoot.class),
+
+    /**
+     * 实体
+     */
+    ENTITY("实体", DataType.OBJECT.getSupportedOperators()
+            , DataType.OBJECT
+            , AbstractEntity.class),
+
+    /**
+     * 值对象
+     */
+    VALUE_OBJECT("值对象", DataType.OBJECT.getSupportedOperators()
+            , DataType.OBJECT
+            , Object.class);
 
     private final String name;
+
+    private final DataType dataType;
 
     private final EnumSet<Operator> supportedOperators;
 
     private final Class javaType;
 
-    DataSubType(String name, EnumSet<Operator> supportedOperators, Class javaType) {
+    DataSubType(String name, EnumSet<Operator> supportedOperators, DataType dataType, Class javaType) {
         this.name = name;
+        this.dataType = dataType;
         this.supportedOperators = supportedOperators;
         this.javaType = javaType;
     }
@@ -148,6 +191,10 @@ public enum DataSubType implements BitEnum<DataSubType> {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    public DataType getDataType() {
+        return dataType;
     }
 
     public EnumSet<Operator> getSupportedOperators() {
